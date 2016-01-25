@@ -1,0 +1,26 @@
+//
+//  PrefixHeader.pch
+//  razuvaevMusic
+//
+//  Created by Pavel Razuvaev on 15.11.15.
+//  Copyright © 2015 Pavel Razuvaev. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#define statusBarHeight [UIApplication sharedApplication].statusBarFrame.size.height
+#define navigationBarHeight self.navigationController.navigationBar.frame.size.height
+#define tabBarHeight self.tabBarController.tabBar.frame.size.height
+#define screenWidth [UIScreen mainScreen].bounds.size.width
+#define screenHeight [UIScreen mainScreen].bounds.size.height
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import <VKSdk.h>
+#import "PRSoundManager.h"
+#import "MainStorage.h"
+#import "API.h"
+
+#define VKAPP_ID    @"5148652"
+
+#endif /* PrefixHeader_pch */
