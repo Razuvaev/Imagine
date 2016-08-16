@@ -37,14 +37,22 @@
     [self addSubview:self.searchButton];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [_avatar setFrame:CGRectMake(10, 10, 40, 40)];
+    [_avatar.layer setCornerRadius:_avatar.frame.size.width/2];
+    [_name sizeToFit];
+    [_name setFrame:CGRectMake(CGRectGetMaxX(_avatar.frame) + 10, 8, screenWidth - (CGRectGetMaxX(_avatar.frame) + 5) - 45, _name.frame.size.height)];
+    [_numberOfSounds sizeToFit];
+    [_numberOfSounds setFrame:CGRectMake(CGRectGetMaxX(_avatar.frame) + 10, CGRectGetMaxY(_name.frame) + 5, _numberOfSounds.frame.size.width, _numberOfSounds.frame.size.height)];
+}
+
 - (WebImageView *)avatar {
     if (!_avatar) {
-        _avatar = [[WebImageView alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
+        _avatar = [[WebImageView alloc] initWithFrame:CGRectZero];
         [_avatar setUserInteractionEnabled:YES];
         [_avatar setContentMode:UIViewContentModeScaleAspectFill];
         [_avatar setClipsToBounds:YES];
-        [_avatar.layer setCornerRadius:_avatar.frame.size.width/2];
-        [_avatar setImageWithURL:[MainStorage sharedMainStorage].currentUser.avatarMediumUrl];
     }
     return _avatar;
 }
@@ -54,10 +62,7 @@
         _name = [[UILabel alloc] init];
         [_name setFont:[UIFont systemFontOfSize:18]];
         [_name setTextColor:[UIColor blackColor]];
-        [_name setText:[MainStorage sharedMainStorage].currentUser.fullName];
         [_name setTextAlignment:NSTextAlignmentLeft];
-        [_name sizeToFit];
-        [_name setFrame:CGRectMake(CGRectGetMaxX(_avatar.frame) + 10, 8, screenWidth - (CGRectGetMaxX(_avatar.frame) + 5) - 45, _name.frame.size.height)];
     }
     return _name;
 }
@@ -89,10 +94,16 @@
 }
 
 #pragma mark setters
+
+- (void)reloadData {
+    [_avatar setImageWithURL:[MainStorage sharedMainStorage].currentUser.avatarMediumUrl];
+    [_name setText:[MainStorage sharedMainStorage].currentUser.fullName];
+    [super layoutSubviews];
+}
+
 - (void)setSoundNumber:(NSNumber *)count {
     [_numberOfSounds setText:[NSString stringWithFormat:@"%@ %@", count, [self countString:count]]];
-    [_numberOfSounds sizeToFit];
-    [_numberOfSounds setFrame:CGRectMake(CGRectGetMaxX(_avatar.frame) + 10, CGRectGetMaxY(_name.frame) + 5, _numberOfSounds.frame.size.width, _numberOfSounds.frame.size.height)];
+    [self layoutSubviews];
     [UIView animateWithDuration:0.25 animations:^{
         [_numberOfSounds setAlpha:1.0];
     }];

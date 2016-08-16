@@ -53,12 +53,15 @@ static CGFloat const rowHeight = 63.5f;
     
     _musicArray = [NSMutableArray new];
     _imageArray = [NSMutableArray new];
-    [self loadData];
+    
+    if ([TokenManager isAuthorised]) {
+        [self loadData];
+    }
 }
 
 #pragma mark loadData
 - (void)loadData {
-    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [[MainStorage sharedMainStorage] returnAccessToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInteger:_musicArray.count]};
+    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [TokenManager fetchToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInteger:_musicArray.count]};
     VKRequest *audioRequest = [VKRequest requestWithMethod:@"audio.get" andParameters:dict];
     [audioRequest executeWithResultBlock:^(VKResponse *response) {
         if ([response.json isKindOfClass:[NSDictionary class]]) {
@@ -73,6 +76,7 @@ static CGFloat const rowHeight = 63.5f;
                     [_musicArray addObject:audio];
                 }
                 [_tableView reloadData];
+                [_header reloadData];
                 _loadMoreAudio = NO;
             }else {
                 _loadMoreAudio = YES;
@@ -86,6 +90,13 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 #pragma mark setupUI
+
+- (UITabBarItem*)tabBarItem {
+    UITabBarItem *item = [[UITabBarItem alloc]initWithTitle:@"My Music" image:[UIImage new] tag:0];
+    [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    return item;
+}
+
 - (UIActivityIndicatorView *)ai {
     if (!_ai) {
         _ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];

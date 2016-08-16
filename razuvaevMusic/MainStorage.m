@@ -117,10 +117,4 @@ MainStorage *sharedMainStorage = nil;
     return [self returnUser];
 }
 
-#pragma mark UserDefaults
-- (NSString *)returnAccessToken {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    return [userDefaults objectForKey:@"accessToken"];
-}
-
 @end

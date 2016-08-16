@@ -18,12 +18,22 @@
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 
+#define VKAPP_ID    @"5148652"
+
+#endif /* PrefixHeader_pch */
+
+#pragma mark - Macros
+#define userDefaults [NSUserDefaults standardUserDefaults]
+
+#pragma mark - Import
+#pragma mark -- Controllers
+#import "TabBarController.h"
+
+#pragma mark -- Others
 #import <VKSdk.h>
 #import "PRSoundManager.h"
 #import "MainStorage.h"
 #import "API.h"
 #import "AppDelegate.h"
+#import "TokenManager.h"
 
-#define VKAPP_ID    @"5148652"
-
-#endif /* PrefixHeader_pch */

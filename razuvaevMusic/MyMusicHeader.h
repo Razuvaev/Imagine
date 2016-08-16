@@ -13,5 +13,6 @@
 @property (nonatomic, strong) UIButton *searchButton;
 
 - (void)setSoundNumber:(NSNumber *)count;
+- (void)reloadData;
 
 @end

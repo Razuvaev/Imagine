@@ -71,15 +71,16 @@ static CGFloat const buttonHeight = 40.f;
 
 #pragma mark - VKDelegate
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:result.token.accessToken forKey:@"accessToken"];
+    [TokenManager persistToken:result.token.accessToken];
     
     UserObject *user = [[UserObject alloc] init];
     [user updateWithUser:result.user];
     [[MainStorage sharedMainStorage] createNewUser:user];
     
-    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate setMain];
+    MyMusicViewController *musicViewController = (MyMusicViewController *)[[AppDelegate mainTabBarController] viewControllerForIndex:0];
+    [musicViewController loadData];
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)vkSdkUserAuthorizationFailed {

@@ -13,9 +13,7 @@
 @interface MainStorage : NSObject
 
 +(MainStorage *)sharedMainStorage;
-
 - (void)createNewUser:(UserObject *)user;
-- (NSString *)returnAccessToken;
 
 @property (nonatomic, strong, readonly) UserObject *currentUser;
 

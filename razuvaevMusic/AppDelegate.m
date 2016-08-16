@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AuthViewController.h"
 #import "MyMusicViewController.h"
+#import "CachedMusicViewController.h"
 
 @interface AppDelegate ()
 
@@ -19,19 +20,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    [VKSdk initializeWithAppId:VKAPP_ID];
+    
     _window = [[UIWindow alloc] initWithFrame:screenBounds];
     [_window setBackgroundColor:[UIColor blackColor]];
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:@"accessToken"] == nil) {
-        [self setAuth];
-    }else {
-        [self setMain];
-    }
-    
+    [self setInitialController];
     [_window makeKeyAndVisible];
     
-    [VKSdk initializeWithAppId:VKAPP_ID];
+    if (![TokenManager isAuthorised]) {
+        [self setAuth];
+    }
     
     return YES;
 }
@@ -90,6 +88,7 @@
 }
 
 #pragma mark - VK delegate
+
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
     [VKSdk processOpenURL:url fromApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
     return YES;
@@ -100,16 +99,27 @@
     return YES;
 }
 
-#pragma mark - RootViewController
+#pragma mark - Navigation
+
 - (void)setAuth {
     AuthViewController *auth = [[AuthViewController alloc] init];
-    _window.rootViewController = auth;
+    [_window.rootViewController presentViewController:auth animated:NO completion:nil];
 }
 
-- (void)setMain {
-    MyMusicViewController *music = [[MyMusicViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:music];
-    _window.rootViewController = navController;
+- (void)setInitialController {
+    TabBarController *tabBarController = [[TabBarController alloc]init];
+    MyMusicViewController *musicViewController = [[MyMusicViewController alloc] init];
+    CachedMusicViewController *cachedMusicViewController = [[CachedMusicViewController alloc] init];
+    
+    UINavigationController *musicNavigationController = [[UINavigationController alloc] initWithRootViewController:musicViewController];
+    UINavigationController *cachedMusicNavigationController = [[UINavigationController alloc] initWithRootViewController:cachedMusicViewController];
+    [tabBarController setViewControllers:@[musicNavigationController,cachedMusicNavigationController]];
+    
+    _window.rootViewController = tabBarController;
+}
+
++ (TabBarController*)mainTabBarController {
+    return (TabBarController*)[UIApplication sharedApplication].keyWindow.rootViewController;
 }
 
 @end

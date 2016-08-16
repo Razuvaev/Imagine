@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44ED51D51D62FE0B0012748E /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D41D62FE0B0012748E /* TabBarController.m */; };
+		44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D81D62FF8D0012748E /* TokenManager.m */; };
+		44ED51DD1D630D310012748E /* CachedMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51DC1D630D310012748E /* CachedMusicViewController.m */; };
 		CA5E3E78B7B97A402A2BEDEC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 164F601522AAC560646EEF82 /* libPods.a */; };
 		E61D50081D4FC4E000A6139E /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E61D50071D4FC4E000A6139E /* BaseViewController.m */; };
 		E62C608B1BFA2D2B001EF88A /* UICircularSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = E62C608A1BFA2D2B001EF88A /* UICircularSlider.m */; };
@@ -42,6 +45,12 @@
 /* Begin PBXFileReference section */
 		048AE1E2899E09DBDDF1A1AF /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		164F601522AAC560646EEF82 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		44ED51D31D62FE0B0012748E /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
+		44ED51D41D62FE0B0012748E /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
+		44ED51D71D62FF8D0012748E /* TokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenManager.h; sourceTree = "<group>"; };
+		44ED51D81D62FF8D0012748E /* TokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TokenManager.m; sourceTree = "<group>"; };
+		44ED51DB1D630D310012748E /* CachedMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CachedMusicViewController.h; sourceTree = "<group>"; };
+		44ED51DC1D630D310012748E /* CachedMusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CachedMusicViewController.m; sourceTree = "<group>"; };
 		CC676D9F0F841A21F8F975E5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E61D50061D4FC4E000A6139E /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		E61D50071D4FC4E000A6139E /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
@@ -120,6 +129,24 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		44ED51D61D62FF710012748E /* TokenManager */ = {
+			isa = PBXGroup;
+			children = (
+				44ED51D71D62FF8D0012748E /* TokenManager.h */,
+				44ED51D81D62FF8D0012748E /* TokenManager.m */,
+			);
+			name = TokenManager;
+			sourceTree = "<group>";
+		};
+		44ED51DA1D630D0C0012748E /* CachedMusicViewController */ = {
+			isa = PBXGroup;
+			children = (
+				44ED51DB1D630D310012748E /* CachedMusicViewController.h */,
+				44ED51DC1D630D310012748E /* CachedMusicViewController.m */,
+			);
+			name = CachedMusicViewController;
+			sourceTree = "<group>";
+		};
 		87D8D109779589B429F6D11B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +160,8 @@
 		E61D50041D4FBCDF00A6139E /* TabBarController */ = {
 			isa = PBXGroup;
 			children = (
+				44ED51D31D62FE0B0012748E /* TabBarController.h */,
+				44ED51D41D62FE0B0012748E /* TabBarController.m */,
 			);
 			name = TabBarController;
 			sourceTree = "<group>";
@@ -210,6 +239,7 @@
 		E63C60901BF8783A00FBC7E8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				44ED51DA1D630D0C0012748E /* CachedMusicViewController */,
 				E63C60911BF8784D00FBC7E8 /* AuthViewController */,
 				E61D50051D4FC4C200A6139E /* BaseViewController */,
 				E63C60AD1BF8AEAC00FBC7E8 /* MyMusicViewController */,
@@ -292,6 +322,7 @@
 		E63C60B61BF8B13700FBC7E8 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				44ED51D61D62FF710012748E /* TokenManager */,
 				E6EE1CB21BF9F7C200834D3B /* API */,
 				E63C60B71BF8B13C00FBC7E8 /* MainStorage */,
 				E6BE295C1BF9B855008C41C5 /* SoundManager */,
@@ -547,10 +578,12 @@
 				E6BE29681BF9C2A2008C41C5 /* PRSoundManager.m in Sources */,
 				E63C60D31BF8CA5100FBC7E8 /* AudioObject.m in Sources */,
 				E62C608B1BFA2D2B001EF88A /* UICircularSlider.m in Sources */,
+				44ED51D51D62FE0B0012748E /* TabBarController.m in Sources */,
 				E6F28D811BFB213200B2F314 /* ControlPanelView.m in Sources */,
 				E63C60BF1BF8B1F100FBC7E8 /* MainStorage.m in Sources */,
 				E63C60CB1BF8C13900FBC7E8 /* MusicTableViewCell.m in Sources */,
 				E63C60B01BF8AF0000FBC7E8 /* MyMusicViewController.m in Sources */,
+				44ED51DD1D630D310012748E /* CachedMusicViewController.m in Sources */,
 				E66313111C09DDF100A93BF1 /* SearchViewController.m in Sources */,
 				E6B952E91BFDDB4000F237A7 /* SLColorArt.m in Sources */,
 				E63C60D91BF8FA1F00FBC7E8 /* PlayerViewController.m in Sources */,
@@ -564,6 +597,7 @@
 				E63C607D1BF86FFA00FBC7E8 /* AppDelegate.m in Sources */,
 				E63C60C31BF8BDF900FBC7E8 /* WebImageView.m in Sources */,
 				E63C60BA1BF8B15B00FBC7E8 /* ImagineModel.xcdatamodeld in Sources */,
+				44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */,
 				E63C607A1BF86FFA00FBC7E8 /* main.m in Sources */,
 				E6B952EA1BFDDB4000F237A7 /* UIImage+Scale.m in Sources */,
 			);

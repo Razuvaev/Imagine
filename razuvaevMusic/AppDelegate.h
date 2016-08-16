@@ -12,8 +12,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-- (void)setAuth;
-- (void)setMain;
++ (TabBarController*)mainTabBarController;
 
 @end
 

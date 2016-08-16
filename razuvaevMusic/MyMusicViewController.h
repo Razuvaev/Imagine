@@ -11,4 +11,6 @@
 
 @interface MyMusicViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, AVAudioPlayerDelegate, UIImagePickerControllerDelegate>
 
+- (void)loadData;
+
 @end
