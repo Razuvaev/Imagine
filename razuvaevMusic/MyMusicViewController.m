@@ -19,6 +19,9 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
+static CGFloat const headerHeight = 60.f;
+static CGFloat const rowHeight = 63.5f;
+
 @interface MyMusicViewController ()
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -42,10 +45,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getGif:) name:MPMoviePlayerThumbnailImageRequestDidFinishNotification object:_player];
-    
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    [self.view setBackgroundColor:[UIColor blackColor]];
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     
     [self.view addSubview:self.ai];
     [self.view addSubview:self.tableView];
@@ -57,7 +58,7 @@
 
 #pragma mark loadData
 - (void)loadData {
-    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [[MainStorage sharedMainStorage] returnAccessToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInt:_musicArray.count]};
+    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [[MainStorage sharedMainStorage] returnAccessToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInteger:_musicArray.count]};
     VKRequest *audioRequest = [VKRequest requestWithMethod:@"audio.get" andParameters:dict];
     [audioRequest executeWithResultBlock:^(VKResponse *response) {
         if ([response.json isKindOfClass:[NSDictionary class]]) {
@@ -101,7 +102,7 @@
         [_tableView setDataSource:self];
         [_tableView setBackgroundColor:[UIColor clearColor]];
         [_tableView registerClass:[MusicTableViewCell class] forCellReuseIdentifier:@"cell"];
-        [_tableView setSeparatorColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+        [_tableView setSeparatorColor:[UIColor grayColor]];
         [_tableView setSeparatorInset:UIEdgeInsetsMake(0, screenWidth, 0, screenWidth)];
     }
     return _tableView;
@@ -109,7 +110,7 @@
 
 - (MyMusicHeader *)header {
     if (!_header) {
-        _header = [[MyMusicHeader alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 60)];
+        _header = [[MyMusicHeader alloc] initWithFrame:CGRectMake(0, 0, screenWidth, headerHeight)];
         [_header.searchButton addTarget:self action:@selector(searchButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _header;
@@ -117,7 +118,7 @@
 
 - (NowPlayingFooter *)footer {
     if (!_footer) {
-        _footer = [[NowPlayingFooter alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 60)];
+        _footer = [[NowPlayingFooter alloc] initWithFrame:CGRectMake(0, 0, screenWidth, headerHeight)];
     }
     return _footer;
 }
@@ -132,7 +133,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 60;
+    return headerHeight;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -148,7 +149,7 @@
 //}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 63.5;
+    return rowHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -177,7 +178,6 @@
         _loadMoreAudio = YES;
         if (_musicArray.count >= 20) {
             [_ai startAnimating];
-//            [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + _ai.frame.size.height*3)];
             [self loadData];
         }
     }
@@ -185,45 +185,13 @@
 
 #pragma mark Actions
 - (void)searchButtonAction {
-    UIImagePickerController *videoPicker = [[UIImagePickerController alloc] init];
-    videoPicker.delegate = self;
-    videoPicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-    videoPicker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-    videoPicker.mediaTypes = @[(NSString*)kUTTypeMovie, (NSString*)kUTTypeAVIMovie, (NSString*)kUTTypeVideo, (NSString*)kUTTypeMPEG4];
-    videoPicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
-    [self presentViewController:videoPicker animated:YES completion:nil];
-
-//    SearchViewController *searchVC = [[SearchViewController alloc] init];
-//    [self.navigationController pushViewController:searchVC animated:YES];
+    SearchViewController *searchVC = [[SearchViewController alloc] init];
+    [self.navigationController pushViewController:searchVC animated:YES];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [picker dismissViewControllerAnimated:YES completion:nil];
-
-    if ([[info objectForKey:UIImagePickerControllerMediaType ] isEqualToString:@"public.movie"]) {
-        _player = [[MPMoviePlayerController alloc] initWithContentURL:[info objectForKey:UIImagePickerControllerMediaURL]];
-        
-        NSMutableArray *timeArray = [NSMutableArray new];
-        for (int i = 0;  i < 25; i++) {
-            [timeArray addObject:[NSNumber numberWithDouble:i]];
-        }
-        [_player requestThumbnailImagesAtTimes:timeArray timeOption:MPMovieTimeOptionExact];
-//        UIImage  *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-        [_player stop];
-//        _player = nil;
-    }
-}
-
-- (void)getGif:(NSNotification *)notification {
-    [_imageArray addObject:[notification.userInfo valueForKey:MPMoviePlayerThumbnailImageKey]];
-    
-    if (_imageArray.count == 25) {
-        UIImageView *image = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        [image setImage:[UIImage animatedImageWithImages:_imageArray duration:_imageArray.count/10]];
-        [image setContentMode:UIViewContentModeScaleToFill];
-        [image setBackgroundColor:[UIColor blackColor]];
-        [self.view addSubview:image];
-    }
+#pragma mark - Layout 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
 }
 
 - (void)didReceiveMemoryWarning {

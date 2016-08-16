@@ -23,7 +23,7 @@
 - (instancetype) initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundColor:[UIColor blackColor]];
+        [self setBackgroundColor:[UIColor colorWithWhite:0.9 alpha:0.95]];
         [self setupUI];
     }
     return self;
@@ -53,7 +53,7 @@
     if (!_name) {
         _name = [[UILabel alloc] init];
         [_name setFont:[UIFont systemFontOfSize:18]];
-        [_name setTextColor:[UIColor whiteColor]];
+        [_name setTextColor:[UIColor blackColor]];
         [_name setText:[MainStorage sharedMainStorage].currentUser.fullName];
         [_name setTextAlignment:NSTextAlignmentLeft];
         [_name sizeToFit];
@@ -66,7 +66,7 @@
     if (!_numberOfSounds) {
         _numberOfSounds = [[UILabel alloc] init];
         [_numberOfSounds setFont:[UIFont systemFontOfSize:14]];
-        [_numberOfSounds setTextColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+        [_numberOfSounds setTextColor:[UIColor grayColor]];
         [_numberOfSounds setAlpha:0.0];
     }
     return _numberOfSounds;
@@ -75,7 +75,7 @@
 - (UIView *)separator {
     if (!_separator) {
         _separator = [[UIView alloc] initWithFrame:CGRectMake(0, 59.5, screenWidth, 0.5)];
-        [_separator setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+        [_separator setBackgroundColor:[UIColor grayColor]];
     }
     return _separator;
 }

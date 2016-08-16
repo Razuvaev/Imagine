@@ -9,31 +9,47 @@
 #import "AuthViewController.h"
 #import "MyMusicViewController.h"
 
+static CGFloat const leftOffset = 20.f;
+static CGFloat const buttonHeight = 40.f;
+
 @interface AuthViewController ()
 
+@property (nonatomic, strong) UIImageView *logoImage;
 @property (nonatomic, strong) UIButton *authButton;
 
 @end
 
 @implementation AuthViewController
 
+#pragma mark - Lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor blackColor]];
-    self.title = @"Авторизация";
     
     [self setupUI];
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 #pragma mark setupUI
 - (void)setupUI {
+    self.view.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:self.logoImage];
     [self.view addSubview:self.authButton];
+}
+
+- (UIImageView *)logoImage {
+    if(!_logoImage) {
+        _logoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Itunes_Artwork"]];
+    }
+    return _logoImage;
 }
 
 - (UIButton *)authButton {
     if (!_authButton) {
-        _authButton = [[UIButton alloc] initWithFrame:CGRectMake(20, (screenHeight - statusBarHeight - navigationBarHeight)/2 - 22, screenWidth - 40, 44)];
+        _authButton = [[UIButton alloc] init];
         [_authButton setTitle:@"Авторизоваться" forState:UIControlStateNormal];
         [_authButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_authButton setTitleColor:[UIColor colorWithWhite:1.0 alpha:0.5] forState:UIControlStateHighlighted];
@@ -53,6 +69,7 @@
     [VKSdk authorize:scope];
 }
 
+#pragma mark - VKDelegate
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:result.token.accessToken forKey:@"accessToken"];
@@ -61,17 +78,20 @@
     [user updateWithUser:result.user];
     [[MainStorage sharedMainStorage] createNewUser:user];
     
-    MyMusicViewController *music = [[MyMusicViewController alloc] init];
-    [self.navigationController pushViewController:music animated:YES];
+    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate setMain];
 }
 
 - (void)vkSdkUserAuthorizationFailed {
     NSLog(@"Error");
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - Layout
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    _logoImage.frame = CGRectMake(leftOffset, leftOffset, screenWidth - 2*leftOffset, screenWidth - 2*leftOffset);
+    _authButton.frame = CGRectMake(leftOffset, screenHeight/2 - buttonHeight/2, screenWidth - 2*leftOffset, buttonHeight);
 }
 
 @end

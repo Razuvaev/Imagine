@@ -20,7 +20,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setBackgroundColor:[UIColor blackColor]];
+        [self setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:self.title];
         [self.contentView addSubview:self.artist];
     }
@@ -30,7 +30,7 @@
 - (UILabel *)title {
     if (!_title) {
         _title = [[UILabel alloc] init];
-        [_title setTextColor:[UIColor whiteColor]];
+        [_title setTextColor:[UIColor blackColor]];
         [_title setFont:[UIFont systemFontOfSize:18]];
     }
     return _title;
@@ -39,7 +39,7 @@
 - (UILabel *)artist {
     if (!_artist) {
         _artist = [[UILabel alloc] init];
-        [_artist setTextColor:[UIColor colorWithWhite:1.0 alpha:0.7]];
+        [_artist setTextColor:[UIColor grayColor]];
         [_artist setFont:[UIFont systemFontOfSize:14]];
     }
     return _artist;
@@ -80,7 +80,6 @@
     UIView *view = [[cell.contentView subviews] lastObject];
     height += CGRectGetMaxY(view.frame);
 
-    
     return height + 10;
 }
 

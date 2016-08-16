@@ -44,7 +44,7 @@
 
 - (UISearchBar *)searchBar {
     if (!_searchBar) {
-        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 20, screenWidth, 40)];
+        _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(60, 20, screenWidth-60, 40)];
         [_searchBar setDelegate:self];
         [_searchBar setBackgroundColor:[UIColor blackColor]];
         [_searchBar setTintColor:[UIColor blackColor]];

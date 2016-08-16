@@ -38,9 +38,9 @@
     
     [self.view setBackgroundColor:[UIColor blackColor]];
     
-    [self.view addSubview:self.imgToLoad];
-    [self.view addSubview:self.blurCover];
-    [self.view addSubview:self.cover];
+//    [self.view addSubview:self.imgToLoad];
+//    [self.view addSubview:self.blurCover];
+//    [self.view addSubview:self.cover];
     [self.view addSubview:self.slider];
     [self.view addSubview:self.closeButton];
     [self.view addSubview:self.artistLabel];
