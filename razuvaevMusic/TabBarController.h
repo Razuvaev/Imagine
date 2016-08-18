@@ -7,11 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PlayerViewController.h"
 
 @interface TabBarController : UITabBarController
 
 #pragma mark - class methods
 
--(UIViewController*)viewControllerForIndex:(NSInteger)index;
++ (UIViewController*)viewControllerForIndex:(NSInteger)index;
++ (TabBarController*)tabBarController;
+
+#pragma mark - player
+
+- (PlayerViewController*)createPlayerWithMusicArray:(NSMutableArray*)musicArray WithIndex:(NSInteger)index;
 
 @end

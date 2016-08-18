@@ -11,6 +11,12 @@
 #import "AudioObject.h"
 #import "ControlPanelView.h"
 #import "WebImageView.h"
+#import "PRSoundManager.h"
+
+typedef NS_ENUM(NSUInteger, PlayerState) {
+    PlayerStatePanel,
+    PlayerStateFullScreen,
+};
 
 @interface PlayerViewController : UIViewController <PRSoundManagerDelegate, ControlPanelViewDelegate>
 

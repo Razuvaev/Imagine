@@ -27,15 +27,9 @@ static CGFloat const rowHeight = 63.5f;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MyMusicHeader *header;
 @property (nonatomic, strong) NowPlayingFooter *footer;
-
 @property (nonatomic, strong) UIActivityIndicatorView *ai;
-
 @property (nonatomic, strong) NSMutableArray *musicArray;
-
-@property (nonatomic, strong) MPMoviePlayerController *player;
-
 @property (nonatomic, strong) NSMutableArray *imageArray;
-
 @property (nonatomic) BOOL loadMoreAudio;
 
 @end
@@ -173,14 +167,13 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    PlayerViewController *player = [[PlayerViewController alloc] init];
-    player.currentMusicIndex = indexPath.row;
-    player.musicArray = _musicArray;
-    [self.navigationController presentViewController:player animated:YES completion:^{
-        
-    }];
+    if (!_playerViewController) {
+        _playerViewController = [[TabBarController tabBarController] createPlayerWithMusicArray:_musicArray WithIndex:indexPath.row];
+    }
+    else {
+        _playerViewController.musicArray = _musicArray;
+        _playerViewController.currentMusicIndex = indexPath.row;
+    }
 }
 
 #pragma mark ScrollView Delegate

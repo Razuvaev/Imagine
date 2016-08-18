@@ -33,6 +33,14 @@
 
 @implementation PlayerViewController
 
+-(void)loadView {
+    [super loadView];
+    
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 35)];
+    view.backgroundColor = [UIColor redColor];
+    [self.view addSubview:view];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -41,14 +49,14 @@
 //    [self.view addSubview:self.imgToLoad];
 //    [self.view addSubview:self.blurCover];
 //    [self.view addSubview:self.cover];
-    [self.view addSubview:self.slider];
-    [self.view addSubview:self.closeButton];
-    [self.view addSubview:self.artistLabel];
-    [self.view addSubview:self.titleLabel];
+//    [self.view addSubview:self.slider];
+//    [self.view addSubview:self.closeButton];
+//    [self.view addSubview:self.artistLabel];
+//    [self.view addSubview:self.titleLabel];
     [self.view addSubview:self.controlPanel];
-    [self.view addSubview:self.moviePlayer.view];    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupCoverAndColors:) name:@"imageLoaded" object:nil];
+//    [self.view addSubview:self.moviePlayer.view];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupCoverAndColors:) name:@"imageLoaded" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

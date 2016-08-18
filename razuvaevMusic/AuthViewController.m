@@ -77,7 +77,7 @@ static CGFloat const buttonHeight = 40.f;
     [user updateWithUser:result.user];
     [[MainStorage sharedMainStorage] createNewUser:user];
     
-    MyMusicViewController *musicViewController = (MyMusicViewController *)[[AppDelegate mainTabBarController] viewControllerForIndex:0];
+    MyMusicViewController *musicViewController = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
     [musicViewController loadData];
     
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];

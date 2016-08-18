@@ -29,6 +29,7 @@
 - (void)play;
 - (void)previousTrack;
 - (void)nextTrack;
+- (BOOL)isPlayingNow;
 
 @end
 

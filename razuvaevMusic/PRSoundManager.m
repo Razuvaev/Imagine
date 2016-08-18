@@ -26,6 +26,7 @@ PRSoundManager *sharedManager = nil;
 }
 
 #pragma mark Actions
+
 - (void)playAudio:(AudioObject *)audio {
     if (!_player) {
         _player = [[MPMoviePlayerController alloc] init];
@@ -98,6 +99,12 @@ PRSoundManager *sharedManager = nil;
 #pragma mark Notifications
 - (void)moviePlayBackDidFinish:(NSNotification *)noti {
     [self nextTrack];
+}
+
+#pragma mark - Observer
+
+- (BOOL)isPlayingNow {
+    return [_player playbackState] == MPMoviePlaybackStatePlaying;
 }
 
 @end
