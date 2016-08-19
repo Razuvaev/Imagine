@@ -12,12 +12,6 @@
 
 @interface ControlPanelView : UIView
 
-@property (nonatomic, strong) UIButton *pauseButton;
-@property (nonatomic, strong) UIButton *playButton;
-@property (nonatomic, strong) UIButton *shuffleButton;
-@property (nonatomic, strong) UIButton *nextButton;
-@property (nonatomic, strong) UIButton *previousButton;
-
 @property (nonatomic) BOOL isPlaying;
 @property (nonatomic, weak) NSObject<ControlPanelViewDelegate> *delegate;
 

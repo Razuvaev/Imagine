@@ -36,9 +36,7 @@
 -(void)loadView {
     [super loadView];
     
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 35)];
-    view.backgroundColor = [UIColor redColor];
-    [self.view addSubview:view];
+    [self.view addSubview:self.controlPanel];
 }
 
 - (void)viewDidLoad {
@@ -53,7 +51,7 @@
 //    [self.view addSubview:self.closeButton];
 //    [self.view addSubview:self.artistLabel];
 //    [self.view addSubview:self.titleLabel];
-    [self.view addSubview:self.controlPanel];
+
 //    [self.view addSubview:self.moviePlayer.view];
 //    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupCoverAndColors:) name:@"imageLoaded" object:nil];
@@ -73,7 +71,16 @@
     [super viewWillDisappear:animated];
 }
 
+#pragma mark - Layout
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    [_controlPanel setFrame:CGRectMake(0.f,0.f,self.view.frame.size.width, panelHeight)];
+}
+
 #pragma mark setupUI
+
 - (MPMoviePlayerController *)moviePlayer {
     AudioObject *currentAudio = [_musicArray objectAtIndex:_currentMusicIndex];
     [[PRSoundManager sharedManager] setDelegate:self];
@@ -158,7 +165,7 @@
 
 - (ControlPanelView *)controlPanel {
     if (!_controlPanel) {
-        _controlPanel = [[ControlPanelView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_cover.frame) + 10, screenWidth, 40)];
+        _controlPanel = [[ControlPanelView alloc] initWithFrame:CGRectZero];
         _controlPanel.isPlaying = YES;
         [_controlPanel setDelegate:self];
     }
@@ -175,11 +182,11 @@
     UIImage *bluredImage = [image blurredImage];
     _colorArt = [image colorArt];
 
-    [_controlPanel.playButton setTintColor:_colorArt.secondaryColor];
-    [_controlPanel.pauseButton setTintColor:_colorArt.secondaryColor];
-    [_controlPanel.nextButton setTintColor:_colorArt.secondaryColor];
-    [_controlPanel.previousButton setTintColor:_colorArt.secondaryColor];
-    [_controlPanel.shuffleButton setTintColor:[_colorArt.secondaryColor colorWithAlphaComponent:[PRSoundManager sharedManager].shuffle ? 1.0 : 0.5]];
+//    [_controlPanel.playButton setTintColor:_colorArt.secondaryColor];
+//    [_controlPanel.pauseButton setTintColor:_colorArt.secondaryColor];
+//    [_controlPanel.nextButton setTintColor:_colorArt.secondaryColor];
+//    [_controlPanel.previousButton setTintColor:_colorArt.secondaryColor];
+//    [_controlPanel.shuffleButton setTintColor:[_colorArt.secondaryColor colorWithAlphaComponent:[PRSoundManager sharedManager].shuffle ? 1.0 : 0.5]];
     
     [UIView transitionWithView:self.view duration:1.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [_cover.activityIndicator stopAnimating];
@@ -217,7 +224,7 @@
 
 - (void)shuffle {
     [PRSoundManager sharedManager].shuffle = ![PRSoundManager sharedManager].shuffle;
-    [_controlPanel.shuffleButton setTintColor:[_colorArt.secondaryColor colorWithAlphaComponent:[PRSoundManager sharedManager].shuffle ? 1.0 : 0.5]];
+//    [_controlPanel.shuffleButton setTintColor:[_colorArt.secondaryColor colorWithAlphaComponent:[PRSoundManager sharedManager].shuffle ? 1.0 : 0.5]];
 }
 
 #pragma mark SoundManagerDelegate

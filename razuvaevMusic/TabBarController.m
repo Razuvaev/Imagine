@@ -8,8 +8,6 @@
 
 #import "TabBarController.h"
 
-const CGFloat panelHeight = 35.f;
-
 @interface TabBarController () <PRSoundManagerDelegate>
 
 @property UIPanGestureRecognizer *panGestureRecognizer;
@@ -22,6 +20,7 @@ const CGFloat panelHeight = 35.f;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tabBar.translucent = NO;
 }
 
 #pragma mark - Layout

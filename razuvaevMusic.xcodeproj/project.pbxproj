@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44DF227D1D66A767006D16F8 /* UIImageCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF227C1D66A767006D16F8 /* UIImageCustom.m */; };
 		44ED51D51D62FE0B0012748E /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D41D62FE0B0012748E /* TabBarController.m */; };
 		44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D81D62FF8D0012748E /* TokenManager.m */; };
 		44ED51DD1D630D310012748E /* CachedMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51DC1D630D310012748E /* CachedMusicViewController.m */; };
@@ -45,6 +46,8 @@
 /* Begin PBXFileReference section */
 		048AE1E2899E09DBDDF1A1AF /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		164F601522AAC560646EEF82 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		44DF227B1D66A767006D16F8 /* UIImageCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageCustom.h; sourceTree = "<group>"; };
+		44DF227C1D66A767006D16F8 /* UIImageCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageCustom.m; sourceTree = "<group>"; };
 		44ED51D31D62FE0B0012748E /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		44ED51D41D62FE0B0012748E /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
 		44ED51D71D62FF8D0012748E /* TokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TokenManager.h; sourceTree = "<group>"; };
@@ -127,6 +130,15 @@
 				048AE1E2899E09DBDDF1A1AF /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		44DF227E1D66A769006D16F8 /* UIImageByAlpha */ = {
+			isa = PBXGroup;
+			children = (
+				44DF227B1D66A767006D16F8 /* UIImageCustom.h */,
+				44DF227C1D66A767006D16F8 /* UIImageCustom.m */,
+			);
+			name = UIImageByAlpha;
 			sourceTree = "<group>";
 		};
 		44ED51D61D62FF710012748E /* TokenManager */ = {
@@ -282,6 +294,7 @@
 		E63C60A81BF8953500FBC7E8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				44DF227E1D66A769006D16F8 /* UIImageByAlpha */,
 				E62C60881BFA2D1F001EF88A /* CircleSlider */,
 				E6B952DF1BFDD4A800F237A7 /* ColorFinder */,
 				E63C60C01BF8BDE400FBC7E8 /* WebImageView */,
@@ -597,6 +610,7 @@
 				E63C607D1BF86FFA00FBC7E8 /* AppDelegate.m in Sources */,
 				E63C60C31BF8BDF900FBC7E8 /* WebImageView.m in Sources */,
 				E63C60BA1BF8B15B00FBC7E8 /* ImagineModel.xcdatamodeld in Sources */,
+				44DF227D1D66A767006D16F8 /* UIImageCustom.m in Sources */,
 				44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */,
 				E63C607A1BF86FFA00FBC7E8 /* main.m in Sources */,
 				E6B952EA1BFDDB4000F237A7 /* UIImage+Scale.m in Sources */,

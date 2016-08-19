@@ -36,4 +36,9 @@
 #import "API.h"
 #import "AppDelegate.h"
 #import "TokenManager.h"
+#import "UIImageCustom.h"
+
+#pragma mark - contst
+
+static const CGFloat panelHeight = 40.f;
 
