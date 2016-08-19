@@ -20,4 +20,7 @@
 
 - (PlayerViewController*)createPlayerWithMusicArray:(NSMutableArray*)musicArray WithIndex:(NSInteger)index;
 
+- (void)openPlayerFromPanel;
+- (void)closePlayerFromFullScreen;
+
 @end

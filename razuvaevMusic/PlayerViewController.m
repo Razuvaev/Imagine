@@ -26,7 +26,6 @@
 @property (nonatomic, strong) WebImageView *cover;
 
 @property (nonatomic, strong) UICircularSlider *slider;
-@property (nonatomic, strong) ControlPanelView *controlPanel;
 @property (nonatomic, strong) SLColorArt *colorArt;
 
 @end
@@ -35,14 +34,21 @@
 
 -(void)loadView {
     [super loadView];
-    
     [self.view addSubview:self.controlPanel];
+    
+    CALayer *backgroundLayer = [[CALayer alloc] init];
+    backgroundLayer.backgroundColor = [UIColor blackColor].CGColor;
+    backgroundLayer.frame = (CGRect) {
+        .origin.x = 0,
+        .origin.y = panelHeight,
+        .size.width = self.view.frame.size.width,
+        .size.height = self.view.frame.size.height,
+    };
+    [self.view.layer addSublayer:backgroundLayer];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor blackColor]];
     
 //    [self.view addSubview:self.imgToLoad];
 //    [self.view addSubview:self.blurCover];

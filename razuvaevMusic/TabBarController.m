@@ -8,6 +8,8 @@
 
 #import "TabBarController.h"
 
+const CGFloat playerAnimationDuration = 0.25f;
+
 @interface TabBarController () <PRSoundManagerDelegate>
 
 @property UIPanGestureRecognizer *panGestureRecognizer;
@@ -79,10 +81,12 @@ CGFloat startPosition = 0.f;
                 case PlayerStatePanel: {
                     if (startPosition - translatedPoint.y > 0) {
                         [[panRecognizer view] setCenter:translatedPoint];
+                        _playerController.controlPanel.alpha = (translatedPoint.y-self.view.center.y)/startPosition;
                     }
                     else {
                         translatedPoint = CGPointMake(self.view.center.x, startPosition);
                         [[panRecognizer view] setCenter:translatedPoint];
+                        _playerController.controlPanel.alpha = 1.f;
                     }
                     break;
                 }
@@ -90,9 +94,11 @@ CGFloat startPosition = 0.f;
                     if (translatedPoint.y <= startPosition) {
                         translatedPoint = CGPointMake(self.view.center.x, startPosition);
                         [[panRecognizer view] setCenter:translatedPoint];
+                        _playerController.controlPanel.alpha = 0.f;
                     }
                     else {
                         [[panRecognizer view] setCenter:translatedPoint];
+                        _playerController.controlPanel.alpha = (translatedPoint.y-self.view.center.y)/startPosition;
                     }
                     break;
                 }
@@ -102,24 +108,54 @@ CGFloat startPosition = 0.f;
             break;
         }
         case UIGestureRecognizerStateEnded: {
+            
+            CGFloat velocityY = (0.2f*[panRecognizer velocityInView:self.view].y);
+            CGFloat animationDuration = (ABS(velocityY)*.0002)+.3;
+            
             CGFloat pointPlayerViewTop = _playerController.view.frame.origin.y;
-            if (pointPlayerViewTop < self.view.center.y - self.tabBar.frame.size.height) {
-                CGRect newFrame = _playerController.view.frame;
-                newFrame.origin.y = -panelHeight;
-                [UIView animateWithDuration:0.45f animations:^{
-                    _playerController.view.frame = newFrame;
+            CGFloat alphaControlPanel = 0.f;
+            CGRect newFrame = CGRectZero;
+            
+            if (ABS(velocityY) < 50.f) {
+                if (pointPlayerViewTop < self.view.center.y - self.tabBar.frame.size.height) {
+                    newFrame = _playerController.view.frame;
+                    newFrame.origin.y = -panelHeight;
                     _playerState = PlayerStateFullScreen;
-                }];
+                    alphaControlPanel = 0.f;
+                }
+                else {
+                    newFrame = _playerController.view.frame;
+                    newFrame.origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight;
+                    _playerState = PlayerStatePanel;
+                    alphaControlPanel = 1.f;
+                }
+                animationDuration = playerAnimationDuration;
             }
             else
             {
-                CGRect newFrame = _playerController.view.frame;
-                newFrame.origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight;
-                [UIView animateWithDuration:0.45f animations:^{
-                    _playerController.view.frame = newFrame;
+                if (velocityY < 0) {
+                    newFrame = _playerController.view.frame;
+                    newFrame.origin.y = -panelHeight;
+                    _playerState = PlayerStateFullScreen;
+                    alphaControlPanel = 0.f;
+                }
+                else {
+                    newFrame = _playerController.view.frame;
+                    newFrame.origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight;
                     _playerState = PlayerStatePanel;
-                }];
+                    alphaControlPanel = 1.f;
+                }
             }
+            
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:animationDuration];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+            [UIView setAnimationDelegate:self];
+            
+            _playerController.view.frame = newFrame;
+            _playerController.controlPanel.alpha = alphaControlPanel;
+            
+            [UIView commitAnimations];
             break;
         }
         default: {
@@ -127,6 +163,40 @@ CGFloat startPosition = 0.f;
             break;
         }
     }
+}
+
+- (void)openPlayerFromPanel {
+    
+    CGRect newFrame = _playerController.view.frame;
+    newFrame.origin.y = -panelHeight;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:playerAnimationDuration];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView setAnimationDelegate:self];
+    
+    _playerController.view.frame = newFrame;
+    _playerController.controlPanel.alpha = 0.f;
+    
+    [UIView commitAnimations];
+    _playerState = PlayerStateFullScreen;
+}
+
+- (void)closePlayerFromFullScreen {
+    
+    CGRect newFrame = _playerController.view.frame;
+    newFrame.origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:playerAnimationDuration];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView setAnimationDelegate:self];
+    
+    _playerController.view.frame = newFrame;
+    _playerController.controlPanel.alpha = 1.f;
+    
+    [UIView commitAnimations];
+    _playerState = PlayerStatePanel;
 }
 
 #pragma mark - class methods
