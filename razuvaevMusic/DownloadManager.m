@@ -33,26 +33,24 @@
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    AudioManagedObject *audioManagedObject = [[MainStorage sharedMainStorage] createNewAudioObject];
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:audioObject.url]];
     
     id newCompletionHandler = ^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        
-        completionHandler(response,filePath,error);
-        
-        if (!error) {
+        if (!error && audioObject) {
+            
+            AudioManagedObject *audioManagedObject = [[MainStorage sharedMainStorage] createNewAudioObject];
             [audioManagedObject updateWithAudio:audioObject WithHomePath:[filePath path]];
             [[MainStorage sharedMainStorage] saveContext];
             
 #warning TODO: rewrite this place
             MyMusicViewController *myMusicVc = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
             [myMusicVc.tableView reloadData];
-            
         }
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        completionHandler(response,filePath,error);
     };
     
     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:&progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {

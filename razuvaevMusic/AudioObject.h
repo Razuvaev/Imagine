@@ -9,10 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@interface AudioObject : NSObject
+@protocol AudioDownloadDelegate <NSObject>
 
-@property (strong, nonatomic) NSURLSessionDownloadTask *currentTask;
-@property (strong, nonatomic) NSProgress *progress;
+- (void)changeStateDownloading:(id)audio;
+- (void)changeFraction:(double)fraction;
+
+@end
+
+typedef NS_ENUM(NSUInteger, AudioFileState) {
+    AudioFilePlain,
+    AudioFileCached,
+    AudioFileDownloading
+};
+
+@interface AudioObject : NSObject
 
 @property (nonatomic, strong) NSString *artist;
 @property (nonatomic, strong) NSString *title;
@@ -20,6 +30,16 @@
 @property (nonatomic, strong) NSNumber *duration;
 
 - (void)updateWithDictionary:(NSDictionary *)dict;
+
+#pragma mark - Downloading
+
+@property (nonatomic,strong) id <AudioDownloadDelegate> delegate;
+- (AudioFileState)downloadStatus;
+- (void)downloadAudioFile;
+- (void)cancelDownload;
+
+@property (strong, nonatomic) NSURLSessionDownloadTask *currentTask;
+@property (strong, nonatomic) NSProgress *progress;
 
 @end
 

@@ -12,13 +12,10 @@
 #import "DownloadManager.h"
 #import "UIButton+AppStore.h"
 
-static void *ProgressObserverContext = &ProgressObserverContext;
-
-@interface MusicTableViewCell ()
+@interface MusicTableViewCell () <AudioDownloadDelegate>
 
 @property (nonatomic, strong) UILabel *artist;
 @property (nonatomic, strong) UILabel *title;
-@property (nonatomic, strong) AudioObject *audioObject;
 @property (nonatomic, strong) UIButton *cacheMusic;
 @property (nonatomic, strong) LLACircularProgressView *progressView;
 
@@ -27,11 +24,14 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 @implementation MusicTableViewCell
 
 - (void)prepareForReuse {
-    @try{
-        [_audioObject.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
-    }@catch(id anException){
-        //do nothing, obviously it wasn't attached because an exception was thrown
-    }
+    _progressView.hidden = YES;
+    _cacheMusic.hidden = YES;
+    [_cacheMusic.allTargets.allObjects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [_cacheMusic removeTarget:obj action:@selector(downloadAudioFile) forControlEvents:UIControlEventTouchUpInside];
+    }];
+    [_progressView.allTargets.allObjects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [_cacheMusic removeTarget:obj action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -64,50 +64,61 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     return _artist;
 }
 
+#pragma mark - Download components
+
 - (UIButton *)cacheMusic {
     if (!_cacheMusic) {
         _cacheMusic = [UIButton ASButtonWithFrame:CGRectMake(self.frame.size.width - 25, 63.5f/2.f-12.5f,70, 25) title:@"ЗАГРУЗИТЬ"];
         _cacheMusic.titleLabel.font = [UIFont systemFontOfSize:10.f];
-        [_cacheMusic addTarget:self action:@selector(download) forControlEvents:UIControlEventTouchUpInside];
         _cacheMusic.hidden = YES;
     }
     return _cacheMusic;
 }
 
-#pragma mark setters
+- (LLACircularProgressView*)progressView {
+    if (!_progressView) {
+        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(self.frame.size.width-10,63.5f/2.f-22,44,44)];
+        _progressView.progress = 0.0f;
+        _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+        _progressView.hidden = YES;
+    }
+    return _progressView;
+}
+
+#pragma mark - Setter
+
 - (void)setupCellWithAudio:(AudioObject *)audio {
-    _audioObject = audio;
     [self setTitleLabel:audio.title];
     [self setArtistLabel:audio.artist];
+    audio.delegate = self;
     
-    if (_audioObject.currentTask) {
-        if (_audioObject.progress.fractionCompleted == 1.0) {
-            _progressView.progress = 0.0f;
-            _audioObject.currentTask = nil;
-            _audioObject.progress = nil;
+    switch ([audio downloadStatus]) {
+        case AudioFilePlain: {
+            _progressView.progress = 0.0;
             _progressView.hidden = YES;
-            _cacheMusic.hidden = YES;
+            _cacheMusic.hidden = NO;
+            [_cacheMusic addTarget:audio action:@selector(downloadAudioFile) forControlEvents:UIControlEventTouchUpInside];
+            break;
         }
-        else {
+        case AudioFileDownloading: {
+            _progressView.progress = audio.progress.fractionCompleted;
             _progressView.hidden = NO;
             _cacheMusic.hidden = YES;
-        
-            [_audioObject.progress addObserver:self
-                                forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
-                                   options:NSKeyValueObservingOptionInitial
-                                   context:ProgressObserverContext];
+            [_progressView addTarget:audio action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
+            break;
+        }
+        case AudioFileCached: {
+            break;
         }
     }
-    else
-    {
-        _progressView.hidden = YES;
-        if (![[MainStorage sharedMainStorage] checkAudioCached:audio.title artist:audio.artist]) {
-            _cacheMusic.hidden = NO;
-        }
-        else {
-            _cacheMusic.hidden = YES;
-        }
-    }
+}
+
+- (void)changeStateDownloading:(AudioObject*)audio {
+    [self setupCellWithAudio:audio];
+}
+
+- (void)changeFraction:(double)fraction {
+    _progressView.progress = fraction;
 }
 
 - (void)setupCellWithAudioManagedObject:(AudioManagedObject *)audio {
@@ -127,90 +138,15 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     [_artist setFrame:CGRectMake(10, CGRectGetMaxY(_title.frame) + 5, screenWidth - 100, _artist.frame.size.height)];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+#pragma mark Height
 
-    // Configure the view for the selected state
-}
-
-#pragma mark Helpers
 + (CGFloat)cellHeightForMusicCell:(AudioObject *)audio {
     MusicTableViewCell *cell = [[MusicTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-    
     [cell setupCellWithAudio:audio];
-    
     CGFloat height;
-    
     UIView *view = [[cell.contentView subviews] lastObject];
     height += CGRectGetMaxY(view.frame);
-
     return height + 10;
-}
-
-#pragma mark download components
-
-- (LLACircularProgressView*)progressView {
-    if (!_progressView) {
-        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(self.frame.size.width-10,63.5f/2.f-22,44,44)];
-        _progressView.progress = 0.0f;
-        _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-        _progressView.hidden = YES;
-        [_progressView addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _progressView;
-}
-
-- (void)download {
-    _cacheMusic.hidden = YES;
-    _progressView.hidden = NO;
-    _audioObject.progress = [NSProgress progressWithTotalUnitCount:1];
-    [_audioObject.progress addObserver:self
-                    forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
-                       options:NSKeyValueObservingOptionInitial
-                       context:ProgressObserverContext];
-    
-    [_audioObject.progress becomeCurrentWithPendingUnitCount:1];
-    _audioObject.currentTask = [[DownloadManager sharedInstance] downloadAudioWithAudioObject:_audioObject WithProgress:_audioObject.progress WithCompletion:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        
-        @try{
-            [_audioObject.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
-        }@catch(id anException){
-            //do nothing, obviously it wasn't attached because an exception was thrown
-        }
-        
-        _audioObject.currentTask = nil;
-        _audioObject.progress = nil;
-        _cacheMusic.hidden = YES;
-        _progressView.hidden = YES;
-        _progressView.progress = 0.0;
-    }];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context
-{
-    if (context == ProgressObserverContext)
-    {
-        NSProgress *progress = object;
-        _progressView.progress = progress.fractionCompleted;
-    }
-    else
-    {
-        [super observeValueForKeyPath:keyPath ofObject:object
-                               change:change context:context];
-    }
-}
-
-- (void)cancelDownload {
-    if (_audioObject.currentTask) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        [_audioObject.currentTask cancel];
-        _audioObject.currentTask = nil;
-        _audioObject.progress = nil;
-        _cacheMusic.hidden = NO;
-        _progressView.hidden = YES;
-        _progressView.progress = 0.0;
-    }
 }
 
 @end

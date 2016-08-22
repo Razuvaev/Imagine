@@ -7,8 +7,19 @@
 //
 
 #import "AudioObject.h"
+#import "DownloadManager.h"
+
+static void *ProgressObserverContext = &ProgressObserverContext;
+
+@interface AudioObject ()
+
+@end
 
 @implementation AudioObject
+
+-(void)dealloc {
+    self.delegate = nil;
+}
 
 - (void)updateWithDictionary:(NSDictionary *)dict {
     if ([[dict valueForKey:@"artist"] isKindOfClass:[NSString class]]) {
@@ -26,6 +37,73 @@
     if ([[dict valueForKey:@"duration"] isKindOfClass:[NSNumber class]]) {
         self.duration = [dict valueForKey:@"duration"];
     }
+}
+
+- (AudioFileState)downloadStatus {
+    if (_currentTask) {
+        if (_progress && _progress.fractionCompleted != 1.0) {
+            return AudioFileDownloading;
+        }
+    }
+    if ([[MainStorage sharedMainStorage] checkAudioCached:self.title artist:self.artist]) {
+        return AudioFileCached;
+    }
+    return AudioFilePlain;
+}
+
+- (void)downloadAudioFile {
+    if (_currentTask) {
+        @try {
+            [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
+        } @catch (NSException *exception) {
+        }
+        [_currentTask cancel];
+        _progress = nil;
+        _currentTask = nil;
+    }
+    self.progress = [NSProgress progressWithTotalUnitCount:1];
+    [self.progress addObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) options:NSKeyValueObservingOptionInitial context:ProgressObserverContext];
+    [self.progress becomeCurrentWithPendingUnitCount:1];
+    self.currentTask = [[DownloadManager sharedInstance] downloadAudioWithAudioObject:self WithProgress:self.progress WithCompletion:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        
+        @try {
+            [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
+        } @catch (NSException *exception) {
+        }
+        
+        self.currentTask = nil;
+        self.progress = nil;
+        [self.delegate changeStateDownloading:self];
+    }];
+    [self.delegate changeStateDownloading:self];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context {
+    if (context == ProgressObserverContext) {
+        NSProgress *progress = object;
+        [self.delegate changeFraction:progress.fractionCompleted];
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object
+                               change:change context:context];
+    }
+}
+
+- (void)cancelDownload {
+    
+    @try {
+        [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
+    } @catch (NSException *exception) {
+    }
+    
+    if (_currentTask) {
+        [_currentTask cancel];
+    }
+    _progress = nil;
+    _currentTask = nil;
+    
+    [self.delegate changeStateDownloading:self];
 }
 
 @end
