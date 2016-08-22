@@ -12,6 +12,7 @@
 @interface MusicTableViewCell : UITableViewCell
 
 - (void)setupCellWithAudio:(AudioObject *)audio;
+- (void)setupCellWithAudioManagedObject:(AudioManagedObject *)audio;
 
 + (CGFloat)cellHeightForMusicCell:(AudioObject *)audio;
 

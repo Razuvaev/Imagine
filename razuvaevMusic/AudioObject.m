@@ -29,3 +29,21 @@
 }
 
 @end
+
+@implementation AudioManagedObject
+
+@dynamic artist;
+@dynamic title;
+@dynamic url;
+@dynamic home_url;
+@dynamic duration;
+
+-(void)updateWithAudio:(AudioObject *)audioObject WithHomePath:(NSString*)path {
+    self.artist = audioObject.artist;
+    self.title = audioObject.title;
+    self.url = audioObject.url;
+    self.duration = audioObject.duration;
+    self.home_url = path;
+}
+
+@end

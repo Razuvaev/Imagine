@@ -8,11 +8,21 @@
 
 #import "MusicTableViewCell.h"
 #import "AudioObject.h"
+#import "LLACircularProgressView.h"
+#import "DownloadManager.h"
+#import "UIButton+AppStore.h"
+
+static void *ProgressObserverContext = &ProgressObserverContext;
 
 @interface MusicTableViewCell ()
 
 @property (nonatomic, strong) UILabel *artist;
 @property (nonatomic, strong) UILabel *title;
+@property (nonatomic, strong) AudioObject *audioObject;
+@property (nonatomic, strong) UIButton *cacheMusic;
+@property (nonatomic, strong) LLACircularProgressView *progressView;
+
+@property (strong, nonatomic) NSProgress *progress;
 
 @end
 
@@ -23,6 +33,8 @@
         [self setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:self.title];
         [self.contentView addSubview:self.artist];
+        [self.contentView addSubview:self.progressView];
+        [self.contentView addSubview:self.cacheMusic];
     }
     return self;
 }
@@ -45,8 +57,31 @@
     return _artist;
 }
 
+- (UIButton *)cacheMusic {
+    if (!_cacheMusic) {
+        _cacheMusic = [UIButton ASButtonWithFrame:CGRectMake(self.frame.size.width - 25, 63.5f/2.f-12.5f,70, 25) title:@"ЗАГРУЗИТЬ"];
+        _cacheMusic.titleLabel.font = [UIFont systemFontOfSize:10.f];
+        [_cacheMusic addTarget:self action:@selector(download) forControlEvents:UIControlEventTouchUpInside];
+        _cacheMusic.hidden = YES;
+    }
+    return _cacheMusic;
+}
+
 #pragma mark setters
 - (void)setupCellWithAudio:(AudioObject *)audio {
+    _audioObject = audio;
+    [self setTitleLabel:audio.title];
+    [self setArtistLabel:audio.artist];
+    
+    if (![[MainStorage sharedMainStorage] checkAudioCached:audio.title artist:audio.artist]) {
+        _cacheMusic.hidden = NO;
+    }
+    else {
+        _cacheMusic.hidden = YES;
+    }
+}
+
+- (void)setupCellWithAudioManagedObject:(AudioManagedObject *)audio {
     [self setTitleLabel:audio.title];
     [self setArtistLabel:audio.artist];
 }
@@ -82,5 +117,47 @@
 
     return height + 10;
 }
+
+#pragma mark download components
+
+- (LLACircularProgressView*)progressView {
+    if (!_progressView) {
+        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(self.frame.size.width-10,63.5f/2.f-22,44,44)];
+        _progressView.progress = 0.0f;
+        _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+        _progressView.hidden = YES;
+    }
+    return _progressView;
+}
+
+- (void)download {
+    _cacheMusic.hidden = YES;
+    _progressView.hidden = NO;
+    self.progress = [NSProgress progressWithTotalUnitCount:1];
+    
+    [self.progress addObserver:self
+                    forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
+                       options:NSKeyValueObservingOptionInitial
+                       context:ProgressObserverContext];
+    
+    [self.progress becomeCurrentWithPendingUnitCount:1];
+    [[DownloadManager sharedInstance] downloadAudioWithAudioObject:_audioObject WithProgress:self.progress];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context
+{
+    if (context == ProgressObserverContext)
+    {
+        NSProgress *progress = object;
+        _progressView.progress = progress.fractionCompleted;
+    }
+    else
+    {
+        [super observeValueForKeyPath:keyPath ofObject:object
+                               change:change context:context];
+    }
+}
+
 
 @end

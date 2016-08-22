@@ -8,21 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol AudioLoadOperationDelegate <NSObject>
 
-- (void)dataWasLoaded;
-
-@end
-
-@interface DownloadManager : NSObject <AudioLoadOperationDelegate>
+@interface DownloadManager : NSObject
 
 + (instancetype)sharedInstance;
 
-@end
-
-@interface AudioLoadOperation : NSOperation
-
-@property (nonatomic, strong) NSObject<AudioLoadOperationDelegate> *delegate;
-@property (nonatomic, strong) NSString *url;
+- (void)downloadAudioWithAudioObject:(AudioObject*)audioObject WithProgress:(NSProgress*)progress;
 
 @end

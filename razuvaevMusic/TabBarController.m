@@ -23,6 +23,7 @@ const CGFloat playerAnimationDuration = 0.35f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tabBar.translucent = NO;
+    self.tabBar.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
 }
 
 #pragma mark - Layout

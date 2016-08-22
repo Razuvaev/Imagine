@@ -85,8 +85,12 @@ static CGFloat const rowHeight = 63.5f;
 #pragma mark setupUI
 
 - (UITabBarItem*)tabBarItem {
-    UITabBarItem *item = [[UITabBarItem alloc]initWithTitle:@"My Music" image:[UIImage new] tag:0];
+    UITabBarItem *item = [[UITabBarItem alloc]initWithTitle:@"My Music" image:nil tag:0];
+    [item setImage:[[UIImage imageNamed:@"earth"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    [item setSelectedImage:[[UIImage imageNamed:@"earth"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]} forState:UIControlStateSelected];
+    [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0]} forState:UIControlStateFocused];
     return item;
 }
 

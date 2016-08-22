@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>LLACircularProgressView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-razuvaevMusic.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,17 +37,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>47E1382808596C95577A130E31B9A8FD</key>
+		<key>5FE77DADB3048CAD8B72DA959035CD2A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C3343ECCD8AD76E41A442065DAECD9BC</key>
+		<key>7ACF393237817B928A9AB7763992DBDD</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F2C2425C3F9B21B0C799EF662B3B7266</key>
+		<key>80855B5795EB2A1BE1DF346B107EF560</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B3B2BC84728F92B6860E10092443E9A1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -13,8 +13,18 @@
 @interface MainStorage : NSObject
 
 +(MainStorage *)sharedMainStorage;
+
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong, readonly) UserObject *currentUser;
+
+-(void)saveContext;
+
 - (void)createNewUser:(UserObject *)user;
 
-@property (nonatomic, strong, readonly) UserObject *currentUser;
+- (AudioManagedObject*)createNewAudioObject;
+- (BOOL)checkAudioCached:(NSString*)title artist:(NSString*)artist;
+
 
 @end

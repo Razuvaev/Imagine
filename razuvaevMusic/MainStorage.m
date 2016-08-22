@@ -10,10 +10,6 @@
 
 @interface MainStorage ()
 
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 @end
 
 @implementation MainStorage
@@ -115,6 +111,31 @@ MainStorage *sharedMainStorage = nil;
 
 - (UserObject *)currentUser {
     return [self returnUser];
+}
+
+#pragma mark Audio Object
+- (AudioManagedObject*)createNewAudioObject {
+    NSEntityDescription *audioDescription = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
+    return [[AudioManagedObject alloc] initWithEntity:audioDescription insertIntoManagedObjectContext:_managedObjectContext];
+}
+
+#pragma mark check
+
+- (BOOL)checkAudioCached:(NSString*)title artist:(NSString*)artist {
+    NSFetchRequest *request = [[NSFetchRequest alloc]init];
+    NSEntityDescription *description = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
+    [request setEntity:description];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ and artist == %@",title,artist]];
+    NSError *error = nil;
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error: %@", error);
+        return NO;
+    }
+    if (count > 0) {
+        return YES;
+    }
+    return NO;
 }
 
 @end
