@@ -118,11 +118,11 @@
 
 - (void)changeSelectionOnDataSource {
 
-#warning TODO: Need rewrite this place
+#warning TODO: need reload list of songs
 
-    MyMusicViewController *dataSourceController = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
-    [dataSourceController.tableView reloadData];
-    [dataSourceController.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:_currentMusicIndex inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+//    MyMusicViewController *dataSourceController = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
+//    [dataSourceController.tableView reloadData];
+//    [dataSourceController.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:_currentMusicIndex inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

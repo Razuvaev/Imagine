@@ -8,6 +8,8 @@
 
 #import "AudioObject.h"
 #import "DownloadManager.h"
+#import "MyMusicViewController.h"
+#import "TabBarController.h"
 
 static void *ProgressObserverContext = &ProgressObserverContext;
 
@@ -52,20 +54,29 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 }
 
 - (void)downloadAudioFile {
-    if (_currentTask) {
-        @try {
-            [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
-        } @catch (NSException *exception) {
-        }
-        [_currentTask cancel];
-        _progress = nil;
-        _currentTask = nil;
-    }
+//    if (self.currentTask) {
+//        @try {
+//            [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
+//        } @catch (NSException *exception) {
+//        }
+//        [self.currentTask cancel];
+//        _progress = nil;
+//        _currentTask = nil;
+//    }
     self.progress = [NSProgress progressWithTotalUnitCount:1];
     [self.progress addObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) options:NSKeyValueObservingOptionInitial context:ProgressObserverContext];
     [self.progress becomeCurrentWithPendingUnitCount:1];
     self.currentTask = [[DownloadManager sharedInstance] downloadAudioWithAudioObject:self WithProgress:self.progress WithCompletion:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
         
+        if (!error) {
+            AudioManagedObject *audioManagedObject = [[MainStorage sharedMainStorage] createNewAudioObject];
+            [audioManagedObject updateWithAudio:self WithHomePath:[filePath path]];
+            [[MainStorage sharedMainStorage] saveContext];
+#warning TODO: need reload list of songs, something like this
+            MyMusicViewController *myMusicVc = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
+            [myMusicVc.tableView reloadData];
+        }
+
         @try {
             [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
         } @catch (NSException *exception) {

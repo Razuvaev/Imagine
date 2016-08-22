@@ -170,6 +170,7 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[TabBarController tabBarController] playerWithMusicArray:_musicArray WithCurrentPlayingIndex:indexPath.row];
 }
 

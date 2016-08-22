@@ -39,8 +39,15 @@
 
 #pragma mark - Player Actions
 
-- (void)nextAudio:(AudioObject*)audioObject {
-    [_audioPlayer play:audioObject.url];
+- (void)nextAudio:(id)audioObject {
+    if ([audioObject isKindOfClass:[AudioManagedObject class]]) {
+        NSURL *url = [NSURL fileURLWithPath:[(AudioManagedObject*)audioObject home_url]];
+        [_audioPlayer play:url.absoluteString];
+    }
+    else {
+        NSURL *url = [NSURL URLWithString:[(AudioObject*)audioObject url]];
+        [_audioPlayer play:url.absoluteString];
+    }
     [self setRemoteInfo:audioObject];
 }
 
