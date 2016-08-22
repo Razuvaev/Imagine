@@ -68,7 +68,7 @@
 
 - (UIButton *)cacheMusic {
     if (!_cacheMusic) {
-        _cacheMusic = [UIButton ASButtonWithFrame:CGRectMake(self.frame.size.width - 25, 63.5f/2.f-12.5f,70, 25) title:@"ЗАГРУЗИТЬ"];
+        _cacheMusic = [UIButton ASButtonWithFrame:CGRectMake(screenWidth - 85, 63.5f/2.f-12.5f,70, 25) title:@"ЗАГРУЗИТЬ"];
         _cacheMusic.titleLabel.font = [UIFont systemFontOfSize:10.f];
         _cacheMusic.hidden = YES;
     }
@@ -77,7 +77,7 @@
 
 - (LLACircularProgressView*)progressView {
     if (!_progressView) {
-        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(self.frame.size.width-10,63.5f/2.f-22,44,44)];
+        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(screenWidth-55,63.5f/2.f-22,44,44)];
         _progressView.progress = 0.0f;
         _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
         _progressView.hidden = YES;
