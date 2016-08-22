@@ -31,6 +31,7 @@ const CGFloat insetForComponetes = 5.f;
     if (self) {
         [self setupUI];
         [self setBackgroundColor:[UIColor colorWithRed:(247.0f/255.0f) green:(247.0f/255.0f) blue:(247.0f/255.0f) alpha:1]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changePlaybackState) name:@"changePlayBackState" object:nil];
     }
     return self;
 }
@@ -185,6 +186,30 @@ const CGFloat insetForComponetes = 5.f;
     };
 }
 
+#pragma mark - observer
+
+- (void)changePlaybackState {
+    if ([PRSoundManager sharedManager].isPlayingNow) {
+        
+        UIImage *image = [[UIImage imageNamed:@"pause"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        
+        [_playButton setImage:image forState:UIControlStateNormal];
+        [_playButton setImage:[image imageByApplyingAlpha:0.5f] forState:UIControlStateSelected];
+        [_playButton setImage:[image imageByApplyingAlpha:0.5f] forState:UIControlStateHighlighted];
+        [_playButton removeTarget:self action:@selector(playButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [_playButton addTarget:self action:@selector(pauseButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        
+        UIImage *image = [[UIImage imageNamed:@"play"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        
+        [_playButton setImage:image forState:UIControlStateNormal];
+        [_playButton setImage:[image imageByApplyingAlpha:0.5f] forState:UIControlStateSelected];
+        [_playButton setImage:[image imageByApplyingAlpha:0.5f] forState:UIControlStateHighlighted];
+        [_playButton removeTarget:self action:@selector(pauseButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [_playButton addTarget:self action:@selector(playButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
 #pragma mark Actions
 
 - (void)previousButtonAction {
@@ -195,12 +220,22 @@ const CGFloat insetForComponetes = 5.f;
     [self.delegate play];
 }
 
+- (void)pauseButtonAction {
+    [self.delegate pause];
+}
+
 - (void)nextButtonAction {
     [self.delegate nextTrack];
 }
 
 - (void)shuffleButtonAction {
     [self.delegate shuffle];
+}
+
+- (void)newAudio:(AudioObject *)audio {
+    [self changePlaybackState];
+    [_labelArtist setText:audio.artist];
+    [_labelSong setText:audio.title];
 }
 
 @end

@@ -15,6 +15,7 @@
 
 + (UIViewController*)viewControllerForIndex:(NSInteger)index;
 + (TabBarController*)tabBarController;
++ (void)hideShowTabBarAnimated:(BOOL)hide;
 
 #pragma mark - player
 

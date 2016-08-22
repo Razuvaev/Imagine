@@ -15,6 +15,9 @@
 @property (nonatomic) BOOL isPlaying;
 @property (nonatomic, weak) NSObject<ControlPanelViewDelegate> *delegate;
 
+- (void)newAudio:(AudioObject *)audio;
+- (void)changePlaybackState;
+
 @end
 
 @protocol ControlPanelViewDelegate <NSObject>

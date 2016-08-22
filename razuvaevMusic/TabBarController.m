@@ -8,7 +8,7 @@
 
 #import "TabBarController.h"
 
-const CGFloat playerAnimationDuration = 0.25f;
+const CGFloat playerAnimationDuration = 0.35f;
 
 @interface TabBarController () <PRSoundManagerDelegate>
 
@@ -38,10 +38,18 @@ const CGFloat playerAnimationDuration = 0.25f;
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleGesture:)];
     
     [PRSoundManager sharedManager].delegate = self;
+    [PRSoundManager sharedManager].playlist = musicArray;
+    [PRSoundManager sharedManager].currentIndex = index;
+    
     _playerController = [[PlayerViewController alloc] init];
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openPlayerFromPanel)];
+    [_playerController.controlPanel addGestureRecognizer:tapRecognizer];
+    
     [_playerController.view addGestureRecognizer:_panGestureRecognizer];
     _playerController.musicArray = musicArray;
     _playerController.currentMusicIndex = index;
+    [[PRSoundManager sharedManager] playAudio:[musicArray objectAtIndex:index]];
     
     _playerController.view.frame = (CGRect) {
         .origin.x = 0.f,
@@ -147,6 +155,8 @@ CGFloat startPosition = 0.f;
                 }
             }
             
+            [TabBarController hideShowTabBarAnimated:_playerState == PlayerStateFullScreen];
+            
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:animationDuration];
             [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
@@ -170,6 +180,8 @@ CGFloat startPosition = 0.f;
     CGRect newFrame = _playerController.view.frame;
     newFrame.origin.y = -panelHeight;
     
+    [TabBarController hideShowTabBarAnimated:YES];
+    
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:playerAnimationDuration];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
@@ -186,6 +198,8 @@ CGFloat startPosition = 0.f;
     
     CGRect newFrame = _playerController.view.frame;
     newFrame.origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight;
+    
+    [TabBarController hideShowTabBarAnimated:NO];
     
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:playerAnimationDuration];
@@ -212,6 +226,27 @@ CGFloat startPosition = 0.f;
 
 + (TabBarController*)tabBarController {
     return (TabBarController*)[UIApplication sharedApplication].keyWindow.rootViewController;
+}
+
++ (void)hideShowTabBarAnimated:(BOOL)hide {
+    UITabBar *tabBar = [TabBarController tabBarController].tabBar;
+    if (!hide) {
+        tabBar.hidden = NO;
+        CGRect newFrame = tabBar.frame;
+        newFrame.origin.y = [TabBarController tabBarController].view.frame.size.height - tabBar.frame.size.height;
+        [UIView animateWithDuration:playerAnimationDuration animations:^{
+            tabBar.frame = newFrame;
+        }];
+    }
+    else {
+        CGRect newFrame = tabBar.frame;
+        newFrame.origin.y = [TabBarController tabBarController].view.frame.size.height + tabBar.frame.size.height;
+        [UIView animateWithDuration:playerAnimationDuration animations:^{
+            tabBar.frame = newFrame;
+        } completion:^(BOOL finished) {
+            tabBar.hidden = YES;
+        }];
+    }
 }
 
 @end

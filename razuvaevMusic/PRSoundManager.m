@@ -34,11 +34,12 @@ PRSoundManager *sharedManager = nil;
                                                  selector:@selector(moviePlayBackDidFinish:)
                                                      name:MPMoviePlayerPlaybackDidFinishNotification
                                                    object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangePlaybackState) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
         _shuffle = NO;
     }
     [_player setContentURL:[NSURL URLWithString:audio.url]];
     [self setRemoteInfo:audio];
-    [self play];
+    [_player play];
     
     [self.delegate newAudio:audio];
     
@@ -99,6 +100,10 @@ PRSoundManager *sharedManager = nil;
 #pragma mark Notifications
 - (void)moviePlayBackDidFinish:(NSNotification *)noti {
     [self nextTrack];
+}
+
+- (void)didChangePlaybackState {
+    [self.delegate changePlaybackState];
 }
 
 #pragma mark - Observer

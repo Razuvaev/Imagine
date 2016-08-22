@@ -37,4 +37,5 @@
 @optional
 - (void)coverWasFound:(NSString *)url;
 - (void)newAudio:(AudioObject *)audio;
+- (void)changePlaybackState;
 @end

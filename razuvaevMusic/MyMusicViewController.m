@@ -173,6 +173,7 @@ static CGFloat const rowHeight = 63.5f;
     else {
         _playerViewController.musicArray = _musicArray;
         _playerViewController.currentMusicIndex = indexPath.row;
+        [[PRSoundManager sharedManager] playAudio:[_musicArray objectAtIndex:indexPath.row]];
     }
 }
 

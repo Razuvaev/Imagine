@@ -32,6 +32,10 @@
 
 @implementation PlayerViewController
 
+-(BOOL)hidesBottomBarWhenPushed {
+    return YES;
+}
+
 -(void)loadView {
     [super loadView];
     [self.view addSubview:self.controlPanel];
@@ -58,7 +62,7 @@
 //    [self.view addSubview:self.artistLabel];
 //    [self.view addSubview:self.titleLabel];
 
-//    [self.view addSubview:self.moviePlayer.view];
+    [self.view addSubview:self.moviePlayer.view];
 //    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupCoverAndColors:) name:@"imageLoaded" object:nil];
 }
@@ -88,11 +92,7 @@
 #pragma mark setupUI
 
 - (MPMoviePlayerController *)moviePlayer {
-    AudioObject *currentAudio = [_musicArray objectAtIndex:_currentMusicIndex];
     [[PRSoundManager sharedManager] setDelegate:self];
-    [[PRSoundManager sharedManager] playAudio:currentAudio];
-    [PRSoundManager sharedManager].playlist = _musicArray;
-    [PRSoundManager sharedManager].currentIndex = _currentMusicIndex;
     _moviePlayer = [PRSoundManager sharedManager].player;
     [_moviePlayer.view setHidden:YES];
     
@@ -233,6 +233,10 @@
 //    [_controlPanel.shuffleButton setTintColor:[_colorArt.secondaryColor colorWithAlphaComponent:[PRSoundManager sharedManager].shuffle ? 1.0 : 0.5]];
 }
 
+- (void)changePlaybackState {
+    [self.controlPanel changePlaybackState];
+}
+
 #pragma mark SoundManagerDelegate
 - (void)newAudio:(AudioObject *)audio {
     [_artistLabel setText:audio.artist];
@@ -242,6 +246,8 @@
     [_titleLabel setText:audio.title];
     [_titleLabel sizeToFit];
     [_titleLabel setFrame:CGRectMake(10, CGRectGetMinY(_artistLabel.frame) - 10 - _titleLabel.frame.size.height, screenWidth - 20, _titleLabel.frame.size.height)];
+    
+    [self.controlPanel newAudio:audio];
 }
 
 - (void)coverWasFound:(NSString *)url {
