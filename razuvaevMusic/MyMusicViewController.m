@@ -24,7 +24,6 @@ static CGFloat const rowHeight = 63.5f;
 
 @interface MyMusicViewController ()
 
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) MyMusicHeader *header;
 @property (nonatomic, strong) NowPlayingFooter *footer;
 @property (nonatomic, strong) UIActivityIndicatorView *ai;

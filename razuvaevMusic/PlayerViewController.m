@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "UICircularSlider.h"
 #import "UIImage+ColorArt.h"
+#import "MyMusicViewController.h"
 
 @interface PlayerViewController ()
 
@@ -70,9 +71,14 @@
 }
 
 - (void)play {
-    AudioObject *audio = [_musicArray objectAtIndex:_currentMusicIndex];
-    [self.controlPanel newAudio:audio];
-    [[PRSoundManager sharedInstance] nextAudio:audio];
+    if ([[PRSoundManager sharedInstance] playerState] ==  STKAudioPlayerStatePaused) {
+        [[PRSoundManager sharedInstance] resume];
+    }
+    else {
+        AudioObject *audio = [_musicArray objectAtIndex:_currentMusicIndex];
+        [self.controlPanel newAudio:audio];
+        [[PRSoundManager sharedInstance] nextAudio:audio];
+    }
 }
 
 - (void)pause {
@@ -89,6 +95,8 @@
     AudioObject *audio = [_musicArray objectAtIndex:_currentMusicIndex];
     [self.controlPanel newAudio:audio];
     [[PRSoundManager sharedInstance] nextAudio:audio];
+    
+    [self changeSelectionOnDataSource];
 }
 
 - (void)nextTrack {
@@ -104,6 +112,17 @@
     AudioObject *audio = [_musicArray objectAtIndex:_currentMusicIndex];
     [self.controlPanel newAudio:audio];
     [[PRSoundManager sharedInstance] nextAudio:audio];
+    
+    [self changeSelectionOnDataSource];
+}
+
+- (void)changeSelectionOnDataSource {
+
+#warning TODO: Need rewrite this place
+
+    MyMusicViewController *dataSourceController = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
+    [dataSourceController.tableView reloadData];
+    [dataSourceController.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:_currentMusicIndex inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

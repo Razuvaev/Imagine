@@ -20,6 +20,7 @@
 @property (nonatomic, weak) NSObject<PRSoundManagerDelegate> *delegate;
 
 - (void)nextAudio:(AudioObject*)audioObject;
+- (void)resume;
 - (void)pause;
 
 - (STKAudioPlayerState)playerState;

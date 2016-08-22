@@ -11,6 +11,7 @@
 
 @interface MyMusicViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, AVAudioPlayerDelegate, UIImagePickerControllerDelegate>
 
+@property (nonatomic, strong) UITableView *tableView;
 - (void)loadData;
 @property PlayerViewController *playerViewController;
 

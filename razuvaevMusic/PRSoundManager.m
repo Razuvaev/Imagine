@@ -44,6 +44,10 @@
     [self setRemoteInfo:audioObject];
 }
 
+- (void)resume {
+    [_audioPlayer resume];
+}
+
 - (void)pause {
     [_audioPlayer pause];
 }
