@@ -11,6 +11,9 @@
 
 @interface AudioObject : NSObject
 
+@property (strong, nonatomic) NSURLSessionDownloadTask *currentTask;
+@property (strong, nonatomic) NSProgress *progress;
+
 @property (nonatomic, strong) NSString *artist;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *url;

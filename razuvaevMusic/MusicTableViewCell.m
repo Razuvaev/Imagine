@@ -22,11 +22,18 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 @property (nonatomic, strong) UIButton *cacheMusic;
 @property (nonatomic, strong) LLACircularProgressView *progressView;
 
-@property (strong, nonatomic) NSProgress *progress;
-
 @end
 
 @implementation MusicTableViewCell
+
+- (void)prepareForReuse {
+    @try{
+        [_audioObject.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+    }@catch(id anException){
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
+}
+
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -73,11 +80,33 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     [self setTitleLabel:audio.title];
     [self setArtistLabel:audio.artist];
     
-    if (![[MainStorage sharedMainStorage] checkAudioCached:audio.title artist:audio.artist]) {
-        _cacheMusic.hidden = NO;
+    if (_audioObject.currentTask) {
+        if (_audioObject.progress.fractionCompleted == 1.0) {
+            _progressView.progress = 0.0f;
+            _audioObject.currentTask = nil;
+            _audioObject.progress = nil;
+            _progressView.hidden = YES;
+            _cacheMusic.hidden = YES;
+        }
+        else {
+            _progressView.hidden = NO;
+            _cacheMusic.hidden = YES;
+        
+            [_audioObject.progress addObserver:self
+                                forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
+                                   options:NSKeyValueObservingOptionInitial
+                                   context:ProgressObserverContext];
+        }
     }
-    else {
-        _cacheMusic.hidden = YES;
+    else
+    {
+        _progressView.hidden = YES;
+        if (![[MainStorage sharedMainStorage] checkAudioCached:audio.title artist:audio.artist]) {
+            _cacheMusic.hidden = NO;
+        }
+        else {
+            _cacheMusic.hidden = YES;
+        }
     }
 }
 
@@ -89,13 +118,13 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 - (void)setTitleLabel:(NSString *)title {
     [_title setText:title];
     [_title sizeToFit];
-    [_title setFrame:CGRectMake(10, 10, screenWidth - 20, _title.frame.size.height)];
+    [_title setFrame:CGRectMake(10, 10, screenWidth - 100, _title.frame.size.height)];
 }
 
 - (void)setArtistLabel:(NSString *)artist {
     [_artist setText:artist];
     [_artist sizeToFit];
-    [_artist setFrame:CGRectMake(10, CGRectGetMaxY(_title.frame) + 5, screenWidth - 20, _artist.frame.size.height)];
+    [_artist setFrame:CGRectMake(10, CGRectGetMaxY(_title.frame) + 5, screenWidth - 100, _artist.frame.size.height)];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -126,6 +155,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
         _progressView.progress = 0.0f;
         _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
         _progressView.hidden = YES;
+        [_progressView addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
     }
     return _progressView;
 }
@@ -133,15 +163,27 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 - (void)download {
     _cacheMusic.hidden = YES;
     _progressView.hidden = NO;
-    self.progress = [NSProgress progressWithTotalUnitCount:1];
-    
-    [self.progress addObserver:self
+    _audioObject.progress = [NSProgress progressWithTotalUnitCount:1];
+    [_audioObject.progress addObserver:self
                     forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
                        options:NSKeyValueObservingOptionInitial
                        context:ProgressObserverContext];
     
-    [self.progress becomeCurrentWithPendingUnitCount:1];
-    [[DownloadManager sharedInstance] downloadAudioWithAudioObject:_audioObject WithProgress:self.progress];
+    [_audioObject.progress becomeCurrentWithPendingUnitCount:1];
+    _audioObject.currentTask = [[DownloadManager sharedInstance] downloadAudioWithAudioObject:_audioObject WithProgress:_audioObject.progress WithCompletion:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        
+        @try{
+            [_audioObject.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+        }@catch(id anException){
+            //do nothing, obviously it wasn't attached because an exception was thrown
+        }
+        
+        _audioObject.currentTask = nil;
+        _audioObject.progress = nil;
+        _cacheMusic.hidden = YES;
+        _progressView.hidden = YES;
+        _progressView.progress = 0.0;
+    }];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
@@ -159,5 +201,16 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     }
 }
 
+- (void)cancelDownload {
+    if (_audioObject.currentTask) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [_audioObject.currentTask cancel];
+        _audioObject.currentTask = nil;
+        _audioObject.progress = nil;
+        _cacheMusic.hidden = NO;
+        _progressView.hidden = YES;
+        _progressView.progress = 0.0;
+    }
+}
 
 @end

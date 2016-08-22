@@ -13,6 +13,6 @@
 
 + (instancetype)sharedInstance;
 
-- (void)downloadAudioWithAudioObject:(AudioObject*)audioObject WithProgress:(NSProgress*)progress;
+- (NSURLSessionDownloadTask*)downloadAudioWithAudioObject:(AudioObject*)audioObject WithProgress:(NSProgress*)progress WithCompletion:(void (^)(NSURLResponse *response, NSURL *filePath, NSError *error))completionHandler;
 
 @end
