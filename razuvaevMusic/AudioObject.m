@@ -54,15 +54,6 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 }
 
 - (void)downloadAudioFile {
-//    if (self.currentTask) {
-//        @try {
-//            [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
-//        } @catch (NSException *exception) {
-//        }
-//        [self.currentTask cancel];
-//        _progress = nil;
-//        _currentTask = nil;
-//    }
     self.progress = [NSProgress progressWithTotalUnitCount:1];
     [self.progress addObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) options:NSKeyValueObservingOptionInitial context:ProgressObserverContext];
     [self.progress becomeCurrentWithPendingUnitCount:1];
@@ -102,12 +93,10 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 }
 
 - (void)cancelDownload {
-    
     @try {
         [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];
     } @catch (NSException *exception) {
     }
-    
     if (_currentTask) {
         [_currentTask cancel];
     }
