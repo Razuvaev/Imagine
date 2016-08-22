@@ -19,9 +19,10 @@
 
 #pragma mark - player
 
-- (PlayerViewController*)createPlayerWithMusicArray:(NSMutableArray*)musicArray WithIndex:(NSInteger)index;
+- (PlayerViewController*)playerWithMusicArray:(NSMutableArray*)musicArray WithCurrentPlayingIndex:(NSInteger)index;
 
 - (void)openPlayerFromPanel;
 - (void)closePlayerFromFullScreen;
+- (PlayerViewController*)currentPlayer;
 
 @end

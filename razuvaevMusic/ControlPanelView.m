@@ -189,7 +189,7 @@ const CGFloat insetForComponetes = 5.f;
 #pragma mark - observer
 
 - (void)changePlaybackState {
-    if ([PRSoundManager sharedManager].isPlayingNow) {
+    if ([PRSoundManager sharedInstance].playerState == STKAudioPlayerStatePlaying) {
         
         UIImage *image = [[UIImage imageNamed:@"pause"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
@@ -233,7 +233,7 @@ const CGFloat insetForComponetes = 5.f;
 }
 
 - (void)newAudio:(AudioObject *)audio {
-    [self changePlaybackState];
+    //[self changePlaybackState];
     [_labelArtist setText:audio.artist];
     [_labelSong setText:audio.title];
 }

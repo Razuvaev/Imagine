@@ -9,33 +9,39 @@
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "AudioObject.h"
+#import "STKAudioPlayer.h"
 
 @protocol PRSoundManagerDelegate;
 
 @interface PRSoundManager : NSObject
 
-+ (PRSoundManager *)sharedManager;
-
-@property (nonatomic, strong) MPMoviePlayerController *player;
-@property (nonatomic, strong) NSMutableArray *playlist;
-@property (nonatomic) NSInteger currentIndex;
-@property (nonatomic) BOOL shuffle;
++ (instancetype)sharedInstance;
 
 @property (nonatomic, weak) NSObject<PRSoundManagerDelegate> *delegate;
 
-- (void)playAudio:(AudioObject *)audio;
-
+- (void)nextAudio:(AudioObject*)audioObject;
 - (void)pause;
-- (void)play;
-- (void)previousTrack;
-- (void)nextTrack;
-- (BOOL)isPlayingNow;
+
+- (STKAudioPlayerState)playerState;
+
+//@property (nonatomic, strong) MPMoviePlayerController *player;
+//@property (nonatomic, strong) NSMutableArray *playlist;
+//@property (nonatomic) NSInteger currentIndex;
+//@property (nonatomic) BOOL shuffle;
+
+//- (void)playAudio:(AudioObject *)audio;
+
+//- (void)pause;
+//- (void)play;
+//- (void)previousTrack;
+//- (void)nextTrack;
 
 @end
 
 @protocol PRSoundManagerDelegate<NSObject>
-@optional
-- (void)coverWasFound:(NSString *)url;
-- (void)newAudio:(AudioObject *)audio;
+//@optional
+//- (void)coverWasFound:(NSString *)url;
+//- (void)newAudio:(AudioObject *)audio;
 - (void)changePlaybackState;
+
 @end

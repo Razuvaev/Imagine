@@ -21,7 +21,15 @@ typedef NS_ENUM(NSUInteger, PlayerState) {
 @interface PlayerViewController : UIViewController <PRSoundManagerDelegate, ControlPanelViewDelegate>
 
 @property (nonatomic, strong) ControlPanelView *controlPanel;
+
 @property (nonatomic) NSInteger currentMusicIndex;
 @property (nonatomic, strong) NSMutableArray *musicArray;
+
+- (void)play;
+- (void)pause;
+- (void)previousTrack;
+- (void)nextTrack;
+
++ (PlayerViewController*)currentPlayer;
 
 @end

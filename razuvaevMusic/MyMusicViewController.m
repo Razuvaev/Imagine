@@ -167,14 +167,7 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (!_playerViewController) {
-        _playerViewController = [[TabBarController tabBarController] createPlayerWithMusicArray:_musicArray WithIndex:indexPath.row];
-    }
-    else {
-        _playerViewController.musicArray = _musicArray;
-        _playerViewController.currentMusicIndex = indexPath.row;
-        [[PRSoundManager sharedManager] playAudio:[_musicArray objectAtIndex:indexPath.row]];
-    }
+    [[TabBarController tabBarController] playerWithMusicArray:_musicArray WithCurrentPlayingIndex:indexPath.row];
 }
 
 #pragma mark ScrollView Delegate

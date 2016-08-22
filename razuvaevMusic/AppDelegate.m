@@ -20,6 +20,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    NSError* error;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
     [VKSdk initializeWithAppId:VKAPP_ID];
     
     _window = [[UIWindow alloc] initWithFrame:screenBounds];
@@ -38,7 +42,7 @@
     
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {    
+- (void)applicationDidEnterBackground:(UIApplication *)application {
     NSError *activationError = nil;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:&activationError];
@@ -54,36 +58,41 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-
+    
 }
 
 #pragma mark - RemoteControlDelegate
 -(void)remoteControlReceivedWithEvent:(UIEvent *)event {
-    if (event.type == UIEventTypeRemoteControl){
-        switch (event.subtype) {
-            case UIEventSubtypeRemoteControlPause:
-            {
-                [[PRSoundManager sharedManager] pause];
-                break;
+    
+    if ([PlayerViewController currentPlayer]) {
+        
+        if (event.type == UIEventTypeRemoteControl){
+            switch (event.subtype) {
+                case UIEventSubtypeRemoteControlPause:
+                {
+                    [[PlayerViewController currentPlayer] pause];
+                    break;
+                }
+                case UIEventSubtypeRemoteControlPlay:
+                {
+                    [[PlayerViewController currentPlayer]  play];
+                    break;
+                }
+                case UIEventSubtypeRemoteControlNextTrack:
+                {
+                    [[PlayerViewController currentPlayer]  nextTrack];
+                    break;
+                }
+                case UIEventSubtypeRemoteControlPreviousTrack:
+                {
+                    [[PlayerViewController currentPlayer]  previousTrack];
+                    break;
+                }
+                default:
+                    break;
             }
-            case UIEventSubtypeRemoteControlPlay:
-            {
-                [[PRSoundManager sharedManager] play];
-                break;
-            }
-            case UIEventSubtypeRemoteControlNextTrack:
-            {
-                [[PRSoundManager sharedManager] nextTrack];
-                break;
-            }
-            case UIEventSubtypeRemoteControlPreviousTrack:
-            {
-                [[PRSoundManager sharedManager] previousTrack];
-                break;
-            }
-            default:
-                break;
         }
+        
     }
 }
 

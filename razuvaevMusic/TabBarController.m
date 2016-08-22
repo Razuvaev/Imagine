@@ -10,7 +10,7 @@
 
 const CGFloat playerAnimationDuration = 0.35f;
 
-@interface TabBarController () <PRSoundManagerDelegate>
+@interface TabBarController ()
 
 @property UIPanGestureRecognizer *panGestureRecognizer;
 @property PlayerViewController *playerController;
@@ -33,43 +33,53 @@ const CGFloat playerAnimationDuration = 0.35f;
 
 #pragma mark - player position
 
-- (PlayerViewController*)createPlayerWithMusicArray:(NSMutableArray*)musicArray WithIndex:(NSInteger)index {
-    _playerState = PlayerStatePanel;
-    _panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleGesture:)];
+- (PlayerViewController*)playerWithMusicArray:(NSMutableArray*)musicArray WithCurrentPlayingIndex:(NSInteger)index {
     
-    [PRSoundManager sharedManager].delegate = self;
-    [PRSoundManager sharedManager].playlist = musicArray;
-    [PRSoundManager sharedManager].currentIndex = index;
-    
-    _playerController = [[PlayerViewController alloc] init];
-    
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openPlayerFromPanel)];
-    [_playerController.controlPanel addGestureRecognizer:tapRecognizer];
-    
-    [_playerController.view addGestureRecognizer:_panGestureRecognizer];
-    _playerController.musicArray = musicArray;
-    _playerController.currentMusicIndex = index;
-    [[PRSoundManager sharedManager] playAudio:[musicArray objectAtIndex:index]];
-    
-    _playerController.view.frame = (CGRect) {
-        .origin.x = 0.f,
-        .origin.y = self.view.frame.size.height,
-        .size.width = self.view.frame.size.width,
-        .size.height = self.view.frame.size.height + panelHeight
-    };
-    
-    [self addChildViewController:_playerController];
-    [self.view insertSubview:_playerController.view belowSubview:self.tabBar];
-    
-    [UIView animateWithDuration:0.25 animations:^{
+    if (!_playerController) {
+        
+        _playerState = PlayerStatePanel;
+        _panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleGesture:)];
+        _playerController = [[PlayerViewController alloc] init];
+        [PRSoundManager sharedInstance].delegate = _playerController;
+        
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openPlayerFromPanel)];
+        [_playerController.controlPanel addGestureRecognizer:tapRecognizer];
+        
+        [_playerController.view addGestureRecognizer:_panGestureRecognizer];
         _playerController.view.frame = (CGRect) {
             .origin.x = 0.f,
-            .origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight,
+            .origin.y = self.view.frame.size.height,
             .size.width = self.view.frame.size.width,
             .size.height = self.view.frame.size.height + panelHeight
         };
-    }];
+        
+        [self addChildViewController:_playerController];
+        [self.view insertSubview:_playerController.view belowSubview:self.tabBar];
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            _playerController.view.frame = (CGRect) {
+                .origin.x = 0.f,
+                .origin.y = self.view.frame.size.height - self.tabBar.frame.size.height - panelHeight,
+                .size.width = self.view.frame.size.width,
+                .size.height = self.view.frame.size.height + panelHeight
+            };
+        }];
+        
+    }
+    _playerController.musicArray = musicArray;
+    _playerController.currentMusicIndex = index;
+    
+    AudioObject *nextAudio = [musicArray objectAtIndex:index];
+    [_playerController.controlPanel newAudio:nextAudio];
+    [[PRSoundManager sharedInstance] nextAudio:nextAudio];
+    
     return _playerController;
+}
+
+- (PlayerViewController*)currentPlayer {
+    if (_playerController)
+        return _playerController;
+    return nil;
 }
 
 #pragma mark - gesture recognizer for player
