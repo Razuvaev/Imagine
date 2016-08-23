@@ -37,7 +37,6 @@ const CGFloat playerAnimationDuration = 0.35f;
 - (PlayerViewController*)playerWithMusicArray:(NSMutableArray*)musicArray WithCurrentPlayingIndex:(NSInteger)index {
     
     if (!_playerController) {
-        
         _playerState = PlayerStatePanel;
         _panGestureRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(handleGesture:)];
         _playerController = [[PlayerViewController alloc] init];
@@ -45,6 +44,10 @@ const CGFloat playerAnimationDuration = 0.35f;
         
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openPlayerFromPanel)];
         [_playerController.controlPanel addGestureRecognizer:tapRecognizer];
+        
+#warning TODO: DISABLE GESTURE
+        tapRecognizer.enabled = NO;
+        _panGestureRecognizer.enabled = NO;
         
         [_playerController.view addGestureRecognizer:_panGestureRecognizer];
         _playerController.view.frame = (CGRect) {
@@ -222,6 +225,22 @@ CGFloat startPosition = 0.f;
     
     [UIView commitAnimations];
     _playerState = PlayerStatePanel;
+}
+
+- (void)kickPlayer {
+    [[PlayerViewController currentPlayer] pause];
+    [UIView animateWithDuration:0.25 animations:^{
+        _playerController.view.frame = (CGRect) {
+            .origin.x = 0.f,
+            .origin.y = self.view.frame.size.height,
+            .size.width = self.view.frame.size.width,
+            .size.height = self.view.frame.size.height + panelHeight
+        };
+    } completion:^(BOOL finished) {
+        [_playerController.view removeFromSuperview];
+        [_playerController removeFromParentViewController];
+        _playerController = nil;
+    }];
 }
 
 #pragma mark - class methods

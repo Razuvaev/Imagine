@@ -24,5 +24,6 @@
 - (void)openPlayerFromPanel;
 - (void)closePlayerFromFullScreen;
 - (PlayerViewController*)currentPlayer;
+- (void)kickPlayer;
 
 @end

@@ -48,6 +48,9 @@ static CGFloat const rowHeight = 63.5f;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(openSearch)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
+    
     [self.view addSubview:self.ai];
     [self.view addSubview:self.tableView];
     

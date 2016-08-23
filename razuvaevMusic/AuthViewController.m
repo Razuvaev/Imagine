@@ -92,7 +92,7 @@ static CGFloat const buttonHeight = 40.f;
     [super viewDidLayoutSubviews];
     
     _logoImage.frame = CGRectMake(leftOffset, leftOffset, screenWidth - 2*leftOffset, screenWidth - 2*leftOffset);
-    _authButton.frame = CGRectMake(leftOffset, screenHeight/2 - buttonHeight/2, screenWidth - 2*leftOffset, buttonHeight);
+    _authButton.frame = CGRectMake(leftOffset, screenHeight/2 - buttonHeight/2 + 50.f, screenWidth - 2*leftOffset, buttonHeight);
 }
 
 @end

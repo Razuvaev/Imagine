@@ -46,6 +46,11 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 - (void)changeEditingMode {
+    if (![_tableView isEditing]) {
+        if ([PlayerViewController currentPlayer]) {
+            [[TabBarController tabBarController] kickPlayer];
+        }
+    }
     [_tableView setEditing:!_tableView.editing animated:YES];
 }
 

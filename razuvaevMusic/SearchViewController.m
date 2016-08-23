@@ -118,7 +118,7 @@
 
 #pragma mark Search
 - (void)searchWithText:(NSString *)text {
-    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [TokenManager fetchToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInt:_musicArray.count], @"search_own" : [NSNumber numberWithBool:YES], @"auto_complete" : [NSNumber numberWithBool:YES], @"q" : text};
+    NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [TokenManager fetchToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInt:(unsigned int)_musicArray.count], @"search_own" : [NSNumber numberWithBool:YES], @"auto_complete" : [NSNumber numberWithBool:YES], @"q" : text};
     VKRequest *audioRequest = [VKRequest requestWithMethod:@"audio.search" andParameters:dict];
     [audioRequest executeWithResultBlock:^(VKResponse *response) {
         if ([response.json isKindOfClass:[NSDictionary class]]) {
