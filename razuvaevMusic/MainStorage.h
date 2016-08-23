@@ -25,6 +25,6 @@
 
 - (AudioManagedObject*)createNewAudioObject;
 - (BOOL)checkAudioCached:(NSString*)title artist:(NSString*)artist;
-
+- (NSInteger)nextOrderNumber;
 
 @end

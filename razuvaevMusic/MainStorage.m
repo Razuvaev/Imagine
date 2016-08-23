@@ -114,6 +114,7 @@ MainStorage *sharedMainStorage = nil;
 }
 
 #pragma mark Audio Object
+
 - (AudioManagedObject*)createNewAudioObject {
     NSEntityDescription *audioDescription = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
     return [[AudioManagedObject alloc] initWithEntity:audioDescription insertIntoManagedObjectContext:_managedObjectContext];
@@ -136,6 +137,19 @@ MainStorage *sharedMainStorage = nil;
         return YES;
     }
     return NO;
+}
+
+- (NSInteger)nextOrderNumber {
+    NSFetchRequest *request = [[NSFetchRequest alloc]init];
+    NSEntityDescription *description = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
+    [request setEntity:description];
+    NSError *error = nil;
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error: %@", error);
+        return 0;
+    }
+    return count;
 }
 
 @end

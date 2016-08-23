@@ -50,6 +50,7 @@ typedef NS_ENUM(NSUInteger, AudioFileState) {
 @property (nonatomic, strong) NSString *url;
 @property (nonatomic, strong) NSString *home_url;
 @property (nonatomic, strong) NSNumber *duration;
+@property (nonatomic, strong) NSNumber *order;
 
 -(void)updateWithAudio:(AudioObject *)audioObject WithHomePath:(NSString*)path;
 

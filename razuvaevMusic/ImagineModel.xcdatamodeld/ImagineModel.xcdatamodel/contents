@@ -4,6 +4,7 @@
         <attribute name="artist" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="home_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -14,7 +15,7 @@
         <attribute name="userId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
+        <element name="AudioManagedObject" positionX="-281" positionY="-16" width="128" height="135"/>
         <element name="User" positionX="-63" positionY="-18" width="128" height="103"/>
-        <element name="AudioManagedObject" positionX="-281" positionY="-16" width="128" height="118"/>
     </elements>
 </model>

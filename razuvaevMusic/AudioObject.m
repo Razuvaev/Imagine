@@ -115,6 +115,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 @dynamic url;
 @dynamic home_url;
 @dynamic duration;
+@dynamic order;
 
 -(void)updateWithAudio:(AudioObject *)audioObject WithHomePath:(NSString*)path {
     self.artist = audioObject.artist;
@@ -122,6 +123,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
     self.url = audioObject.url;
     self.duration = audioObject.duration;
     self.home_url = path;
+    self.order = @([MainStorage sharedMainStorage].nextOrderNumber);
 }
 
 @end

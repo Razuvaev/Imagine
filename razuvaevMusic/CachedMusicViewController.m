@@ -15,6 +15,7 @@ static CGFloat const rowHeight = 63.5f;
 @interface CachedMusicViewController () <UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property BOOL didMove;
 
 @end
 
@@ -37,37 +38,38 @@ static CGFloat const rowHeight = 63.5f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    //[self.navigationController setNavigationBarHidden:YES animated:YES];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(changeEditingMode)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:self.tableView];
 }
 
+- (void)changeEditingMode {
+    [_tableView setEditing:!_tableView.editing animated:YES];
+}
+
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, statusBarHeight, screenWidth, screenHeight - statusBarHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, self.view.frame.size.height) style:UITableViewStyleGrouped];
         [_tableView setDelegate:self];
         [_tableView setDataSource:self];
         [_tableView setBackgroundColor:[UIColor clearColor]];
         [_tableView registerClass:[MusicTableViewCell class] forCellReuseIdentifier:@"cell"];
         [_tableView setSeparatorColor:[UIColor grayColor]];
         [_tableView setSeparatorInset:UIEdgeInsetsMake(0, screenWidth, 0, screenWidth)];
+        _tableView.editing = NO;
     }
     return _tableView;
 }
 
 #pragma mark TableView Delegate
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    // Return the number of sections.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [self.fetchedResultsController sections].count;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    // Return the number of rows in the section.
-    id  sectionInfo =
-    [[_fetchedResultsController sections] objectAtIndex:section];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    id  sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
@@ -102,6 +104,38 @@ static CGFloat const rowHeight = 63.5f;
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath{
+    
+    self.fetchedResultsController.delegate = nil;
+    
+    NSMutableArray *objects = [[_fetchedResultsController sections][0] objects].mutableCopy;
+    AudioManagedObject *fromAudioObject = [_fetchedResultsController objectAtIndexPath:fromIndexPath];
+    [objects removeObjectAtIndex:fromIndexPath.row];
+    [objects insertObject:fromAudioObject atIndex:toIndexPath.row];
+    int i = 0;
+    for (AudioManagedObject *mo in objects) {
+        mo.order = @(i);
+        i++;
+    }
+    [self performSelector:@selector(saveContextWithDelay) withObject:nil afterDelay:0.5f];
+}
+
+- (void)saveContextWithDelay {
+    [[MainStorage sharedMainStorage] saveContext];
+    self.fetchedResultsController.delegate = self;
+    NSError *error;
+    [self.fetchedResultsController performFetch:&error];
+    [self.tableView reloadData];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MusicTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (cell == nil) {
@@ -127,20 +161,16 @@ static CGFloat const rowHeight = 63.5f;
     }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription
-                                   entityForName:@"AudioManagedObject" inManagedObjectContext:[MainStorage sharedMainStorage].managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:[MainStorage sharedMainStorage].managedObjectContext];
     [fetchRequest setEntity:entity];
     
-    NSSortDescriptor *sort = [[NSSortDescriptor alloc]
-                              initWithKey:@"title" ascending:NO];
+    NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"order" ascending:YES];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
     
     [fetchRequest setFetchBatchSize:20];
     
     NSFetchedResultsController *theFetchedResultsController =
-    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                        managedObjectContext:[MainStorage sharedMainStorage].managedObjectContext sectionNameKeyPath:nil
-                                                   cacheName:nil];
+    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[MainStorage sharedMainStorage].managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     self.fetchedResultsController = theFetchedResultsController;
     _fetchedResultsController.delegate = self;
     
@@ -148,7 +178,6 @@ static CGFloat const rowHeight = 63.5f;
     [self.fetchedResultsController performFetch:&error];
     
     return _fetchedResultsController;
-    
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -160,7 +189,6 @@ static CGFloat const rowHeight = 63.5f;
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     UITableView *tableView = self.tableView;
-    
     switch(type) {
             
         case NSFetchedResultsChangeInsert:
@@ -176,10 +204,7 @@ static CGFloat const rowHeight = 63.5f;
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray
-                                               arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray
-                                               arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             break;
     }
 }
