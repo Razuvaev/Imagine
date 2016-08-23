@@ -41,7 +41,7 @@
     [self.view addSubview:self.controlPanel];
     
     CALayer *backgroundLayer = [[CALayer alloc] init];
-    backgroundLayer.backgroundColor = [UIColor blackColor].CGColor;
+    backgroundLayer.backgroundColor = [UIColor whiteColor].CGColor;
     backgroundLayer.frame = (CGRect) {
         .origin.x = 0,
         .origin.y = panelHeight,

@@ -26,7 +26,7 @@ static CGFloat const rowHeight = 63.5f;
 #pragma mark setupUI
 
 - (UITabBarItem*)tabBarItem {
-    UITabBarItem *item = [[UITabBarItem alloc]initWithTitle:@"Cache" image:nil tag:0];
+    UITabBarItem *item = [[UITabBarItem alloc]initWithTitle:@"Кэш" image:nil tag:0];
     [item setImage:[[UIImage imageNamed:@"folder"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     [item setSelectedImage:[[UIImage imageNamed:@"folder"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
@@ -38,7 +38,8 @@ static CGFloat const rowHeight = 63.5f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //[self.navigationController setNavigationBarHidden:YES animated:YES];
+    self.title = @"Кэш";
+    self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(changeEditingMode)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:self.tableView];
@@ -86,7 +87,7 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    return self.tableView.editing;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
