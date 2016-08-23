@@ -47,6 +47,11 @@
     else {
         NSURL *url = [NSURL URLWithString:[(AudioObject*)audioObject url]];
         [_audioPlayer play:url.absoluteString];
+        if ([MainStorage sharedMainStorage].currentUser.settings.autodownload) {
+            if ([audioObject downloadStatus] == AudioFilePlain) {
+                [audioObject downloadAudioFile];
+            }
+        }
     }
     [self setRemoteInfo:audioObject];
 }

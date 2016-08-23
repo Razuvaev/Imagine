@@ -15,7 +15,6 @@ static CGFloat const rowHeight = 63.5f;
 @interface CachedMusicViewController () <UITableViewDelegate,UITableViewDataSource,NSFetchedResultsControllerDelegate>
 
 @property (nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property BOOL didMove;
 
 @end
 
@@ -76,7 +75,9 @@ static CGFloat const rowHeight = 63.5f;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     id  sectionInfo = [[_fetchedResultsController sections] objectAtIndex:section];
-    return [sectionInfo numberOfObjects];
+    NSUInteger numberOfObjects = [sectionInfo numberOfObjects];
+    self.navigationItem.rightBarButtonItem.enabled = numberOfObjects > 0;
+    return numberOfObjects;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -100,13 +101,11 @@ static CGFloat const rowHeight = 63.5f;
         AudioManagedObject *managedObject = [_fetchedResultsController objectAtIndexPath:indexPath];
         NSError *error;
         NSString *path = [NSURL URLWithString:managedObject.home_url].absoluteURL.absoluteString;
-        if ([[NSFileManager defaultManager] removeItemAtPath:path error:&error]) {
-            [[MainStorage sharedMainStorage].managedObjectContext deleteObject:managedObject];
-            [[MainStorage sharedMainStorage] saveContext];
-        }
-        else {
+        if (![[NSFileManager defaultManager] removeItemAtPath:path error:&error]) {
             NSLog(@"%@",error.localizedDescription);
         }
+        [[MainStorage sharedMainStorage].managedObjectContext deleteObject:managedObject];
+        [[MainStorage sharedMainStorage] saveContext];
     }
 }
 

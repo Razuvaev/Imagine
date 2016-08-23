@@ -14,7 +14,6 @@
 @property (nonatomic, strong) WebImageView *avatar;
 @property (nonatomic, strong) UILabel *name;
 @property (nonatomic, strong) UILabel *numberOfSounds;
-@property (nonatomic, strong) UIView *separator;
 @property (nonatomic, strong) UIView *separatorTop;
 
 @end
@@ -81,7 +80,7 @@
 
 - (UIView *)separator {
     if (!_separator) {
-        _separator = [[UIView alloc] initWithFrame:CGRectMake(0, 59.5, screenWidth, 1.f/[UIScreen mainScreen].scale)];
+        _separator = [[UIView alloc] initWithFrame:CGRectMake(0, 59.5f, screenWidth, 1.f/[UIScreen mainScreen].scale)];
         [_separator setBackgroundColor:[UIColor grayColor]];
     }
     return _separator;

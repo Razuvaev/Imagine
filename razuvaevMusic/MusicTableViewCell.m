@@ -77,7 +77,7 @@
 
 - (LLACircularProgressView*)progressView {
     if (!_progressView) {
-        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(screenWidth-55,63.5f/2.f-22,44,44)];
+        _progressView = [[LLACircularProgressView alloc]initWithFrame:CGRectMake(screenWidth-45,63.5f/2.f-16.5f,33,33)];
         _progressView.progress = 0.0f;
         _progressView.tintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
         _progressView.hidden = YES;

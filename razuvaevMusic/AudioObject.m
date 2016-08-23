@@ -67,6 +67,10 @@ static void *ProgressObserverContext = &ProgressObserverContext;
             MyMusicViewController *myMusicVc = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
             [myMusicVc.tableView reloadData];
         }
+        else
+        {
+            NSLog(@"@%",error.localizedDescription);
+        }
 
         @try {
             [self removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted)) context:ProgressObserverContext];

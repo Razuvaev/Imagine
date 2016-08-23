@@ -14,5 +14,6 @@
 
 - (void)setSoundNumber:(NSNumber *)count;
 - (void)reloadData;
+@property (nonatomic, strong) UIView *separator;
 
 @end

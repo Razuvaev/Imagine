@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44BCD4481D6C438000AE6179 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BCD4471D6C438000AE6179 /* SettingsViewController.m */; };
+		44BCD44D1D6C46BD00AE6179 /* Settings+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BCD44A1D6C46BD00AE6179 /* Settings+CoreDataProperties.m */; };
+		44BCD44E1D6C46BD00AE6179 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BCD44C1D6C46BD00AE6179 /* Settings.m */; };
+		44BCD4531D6C493800AE6179 /* AutodownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BCD4521D6C493800AE6179 /* AutodownloadCell.m */; };
 		44DF227D1D66A767006D16F8 /* UIImageCustom.m in Sources */ = {isa = PBXBuildFile; fileRef = 44DF227C1D66A767006D16F8 /* UIImageCustom.m */; };
 		44ED51D51D62FE0B0012748E /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D41D62FE0B0012748E /* TabBarController.m */; };
 		44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44ED51D81D62FF8D0012748E /* TokenManager.m */; };
@@ -48,6 +52,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		44BCD4461D6C438000AE6179 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		44BCD4471D6C438000AE6179 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		44BCD4491D6C46BD00AE6179 /* Settings+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Settings+CoreDataProperties.h"; sourceTree = "<group>"; };
+		44BCD44A1D6C46BD00AE6179 /* Settings+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Settings+CoreDataProperties.m"; sourceTree = "<group>"; };
+		44BCD44B1D6C46BD00AE6179 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		44BCD44C1D6C46BD00AE6179 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		44BCD4511D6C493800AE6179 /* AutodownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutodownloadCell.h; sourceTree = "<group>"; };
+		44BCD4521D6C493800AE6179 /* AutodownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutodownloadCell.m; sourceTree = "<group>"; };
 		44DF227B1D66A767006D16F8 /* UIImageCustom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageCustom.h; sourceTree = "<group>"; };
 		44DF227C1D66A767006D16F8 /* UIImageCustom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageCustom.m; sourceTree = "<group>"; };
 		44ED51D31D62FE0B0012748E /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
@@ -135,6 +147,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		44BCD4451D6C435700AE6179 /* SettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				44BCD4501D6C490F00AE6179 /* AutodownloadCell */,
+				44BCD4461D6C438000AE6179 /* SettingsViewController.h */,
+				44BCD4471D6C438000AE6179 /* SettingsViewController.m */,
+			);
+			name = SettingsViewController;
+			sourceTree = "<group>";
+		};
+		44BCD44F1D6C46C200AE6179 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				44BCD4491D6C46BD00AE6179 /* Settings+CoreDataProperties.h */,
+				44BCD44A1D6C46BD00AE6179 /* Settings+CoreDataProperties.m */,
+				44BCD44B1D6C46BD00AE6179 /* Settings.h */,
+				44BCD44C1D6C46BD00AE6179 /* Settings.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		44BCD4501D6C490F00AE6179 /* AutodownloadCell */ = {
+			isa = PBXGroup;
+			children = (
+				44BCD4511D6C493800AE6179 /* AutodownloadCell.h */,
+				44BCD4521D6C493800AE6179 /* AutodownloadCell.m */,
+			);
+			name = AutodownloadCell;
+			sourceTree = "<group>";
+		};
 		44DF227E1D66A769006D16F8 /* UIImageByAlpha */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +327,7 @@
 		E63C60901BF8783A00FBC7E8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				44BCD4451D6C435700AE6179 /* SettingsViewController */,
 				44ED51DA1D630D0C0012748E /* CachedMusicViewController */,
 				E63C60911BF8784D00FBC7E8 /* AuthViewController */,
 				E61D50051D4FC4C200A6139E /* BaseViewController */,
@@ -352,6 +395,7 @@
 		E63C60B11BF8B0C500FBC7E8 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				44BCD44F1D6C46C200AE6179 /* Settings */,
 				E63C60D01BF8CA3D00FBC7E8 /* AudioObject */,
 				E63C60B21BF8B0CC00FBC7E8 /* UserObject */,
 			);
@@ -628,6 +672,7 @@
 				E63C60D31BF8CA5100FBC7E8 /* AudioObject.m in Sources */,
 				E62C608B1BFA2D2B001EF88A /* UICircularSlider.m in Sources */,
 				44ED51D51D62FE0B0012748E /* TabBarController.m in Sources */,
+				44BCD44D1D6C46BD00AE6179 /* Settings+CoreDataProperties.m in Sources */,
 				E6F28D811BFB213200B2F314 /* ControlPanelView.m in Sources */,
 				E63C60BF1BF8B1F100FBC7E8 /* MainStorage.m in Sources */,
 				E63C60CB1BF8C13900FBC7E8 /* MusicTableViewCell.m in Sources */,
@@ -637,6 +682,7 @@
 				E66313111C09DDF100A93BF1 /* SearchViewController.m in Sources */,
 				44EE498F1D6AECDA005B9D79 /* UIButton+AppStore.m in Sources */,
 				E6B952E91BFDDB4000F237A7 /* SLColorArt.m in Sources */,
+				44BCD44E1D6C46BD00AE6179 /* Settings.m in Sources */,
 				E63C60D91BF8FA1F00FBC7E8 /* PlayerViewController.m in Sources */,
 				E63C60B51BF8B11B00FBC7E8 /* UserManagedObject.m in Sources */,
 				44EE49901D6AECDA005B9D79 /* UIImage+Extension.m in Sources */,
@@ -646,9 +692,11 @@
 				E6B952F51BFDF22C00F237A7 /* NowPlayingFooter.m in Sources */,
 				E6EE1CB51BF9F7D400834D3B /* API.m in Sources */,
 				E63C60801BF86FFA00FBC7E8 /* AuthViewController.m in Sources */,
+				44BCD4531D6C493800AE6179 /* AutodownloadCell.m in Sources */,
 				E63C607D1BF86FFA00FBC7E8 /* AppDelegate.m in Sources */,
 				44EE498E1D6AECDA005B9D79 /* ASButton.m in Sources */,
 				E63C60C31BF8BDF900FBC7E8 /* WebImageView.m in Sources */,
+				44BCD4481D6C438000AE6179 /* SettingsViewController.m in Sources */,
 				E63C60BA1BF8B15B00FBC7E8 /* ImagineModel.xcdatamodeld in Sources */,
 				44DF227D1D66A767006D16F8 /* UIImageCustom.m in Sources */,
 				44ED51D91D62FF8D0012748E /* TokenManager.m in Sources */,

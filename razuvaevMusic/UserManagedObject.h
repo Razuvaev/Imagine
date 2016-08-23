@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "Settings.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface UserManagedObject : NSManagedObject
 
@@ -15,6 +18,7 @@
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
 @property (nonatomic, copy) NSString *avatarMediumUrl;
+@property (nullable, nonatomic, retain) Settings *settings;
 
 @end
 
@@ -24,9 +28,12 @@
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSString *avatarMediumUrl;
+@property (nullable, nonatomic, retain) Settings *settings;
 
 @property (nonatomic, readonly) NSString *fullName;
 
 -(void)updateWithUser:(VKUser *)user;
 
 @end
+
+NS_ASSUME_NONNULL_END

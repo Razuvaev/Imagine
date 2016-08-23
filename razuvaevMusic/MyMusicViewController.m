@@ -8,16 +8,13 @@
 
 #import "MyMusicViewController.h"
 #import "SearchViewController.h"
-
 #import "MyMusicHeader.h"
 #import "MusicTableViewCell.h"
 #import "NowPlayingFooter.h"
-
 #import "AudioObject.h"
-
 #import "PlayerViewController.h"
-
 #import <MediaPlayer/MediaPlayer.h>
+#import "SettingsViewController.h"
 
 static CGFloat const headerHeight = 60.f;
 static CGFloat const rowHeight = 63.5f;
@@ -30,6 +27,8 @@ static CGFloat const rowHeight = 63.5f;
 @property (nonatomic, strong) NSMutableArray *musicArray;
 @property (nonatomic, strong) NSMutableArray *imageArray;
 @property (nonatomic) BOOL loadMoreAudio;
+
+@property UIRefreshControl *refreshControl;
 
 //@property UISearchDisplayController *searchDisplayController;
 //@property UISearchBar *searchBar;
@@ -48,7 +47,7 @@ static CGFloat const rowHeight = 63.5f;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(openSearch)];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    self.navigationItem.rightBarButtonItem.enabled = NO;
+    //self.navigationItem.rightBarButtonItem.enabled = NO;
     self.navigationItem.leftBarButtonItem.enabled = NO;
     
     [self.view addSubview:self.ai];
@@ -60,6 +59,12 @@ static CGFloat const rowHeight = 63.5f;
     if ([TokenManager isAuthorised]) {
         [self loadData];
     }
+    
+    _refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl.backgroundColor = [UIColor whiteColor];
+    _refreshControl.clipsToBounds = YES;
+    [_refreshControl addTarget:self action:@selector(handleRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:_refreshControl];
     
 //    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,320,40)]; // frame has no effect.
 //    _searchBar.delegate = self;
@@ -78,8 +83,21 @@ static CGFloat const rowHeight = 63.5f;
 //    [_searchDisplayController.searchResultsTableView registerClass:[MusicTableViewCell class] forCellReuseIdentifier:@"cell"];
 }
 
+- (void)handleRefresh:(id)sender {
+    [[TabBarController tabBarController] kickPlayer];
+    _musicArray = [NSMutableArray array];
+    [self loadData];
+}
+
 - (void)openSettings {
-    
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc]init];
+    UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:settingsViewController];
+    [self presentViewController:navigationController animated:YES completion:nil];
+    settingsViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Закрыть" style:UIBarButtonItemStylePlain target:self action:@selector(closeSettings)];
+}
+
+- (void)closeSettings {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)openSearch {
@@ -87,6 +105,7 @@ static CGFloat const rowHeight = 63.5f;
 }
 
 #pragma mark loadData
+
 - (void)loadData {
     NSDictionary *dict = @{VK_API_ACCESS_TOKEN : [TokenManager fetchToken], VK_API_OWNER_ID : [MainStorage sharedMainStorage].currentUser.userId, @"count" : [NSNumber numberWithInt:100], @"offset" : [NSNumber numberWithInteger:_musicArray.count]};
     VKRequest *audioRequest = [VKRequest requestWithMethod:@"audio.get" andParameters:dict];
@@ -104,13 +123,13 @@ static CGFloat const rowHeight = 63.5f;
                 }
                 [_tableView reloadData];
                 [_header reloadData];
-                _footer.hidden = NO;
+                _header.separator.hidden = YES;
                 _loadMoreAudio = NO;
             }else {
                 _loadMoreAudio = YES;
             }
             [_ai stopAnimating];
-            
+            [_refreshControl endRefreshing];
         }
     } errorBlock:^(NSError *error) {
         
@@ -140,12 +159,13 @@ static CGFloat const rowHeight = 63.5f;
 
 - (UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height-self.navigationController.navigationBar.frame.size.height-[UIApplication sharedApplication].statusBarFrame.size.height) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height-self.navigationController.navigationBar.frame.size.height-[UIApplication sharedApplication].statusBarFrame.size.height) style:UITableViewStyleGrouped];
         [_tableView setDelegate:self];
         [_tableView setDataSource:self];
-        [_tableView setBackgroundColor:[UIColor clearColor]];
+        [_tableView setBackgroundColor:[UIColor whiteColor]];
         [_tableView registerClass:[MusicTableViewCell class] forCellReuseIdentifier:@"cell"];
         [_tableView setSeparatorColor:[UIColor grayColor]];
+        _tableView.clipsToBounds = YES;
         [_tableView setSeparatorInset:UIEdgeInsetsMake(0, screenWidth, 0, screenWidth)];
     }
     return _tableView;
@@ -155,17 +175,9 @@ static CGFloat const rowHeight = 63.5f;
     if (!_header) {
         _header = [[MyMusicHeader alloc] initWithFrame:CGRectMake(0, 0, screenWidth, headerHeight)];
         [_header.searchButton addTarget:self action:@selector(searchButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        _header.clipsToBounds = YES;
     }
     return _header;
-}
-
-- (NowPlayingFooter *)footer {
-    if (!_footer) {
-        _footer = [[NowPlayingFooter alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 1.f/[UIScreen mainScreen].scale)];
-        _footer.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.25f];
-        _footer.hidden = YES;
-    }
-    return _footer;
 }
 
 #pragma mark TableView Delegate
@@ -185,12 +197,12 @@ static CGFloat const rowHeight = 63.5f;
     return self.header;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return self.footer;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+//    return self.footer;
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return 1.f/[UIScreen mainScreen].scale;
+    return CGFLOAT_MIN;// 1.f/[UIScreen mainScreen].scale;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

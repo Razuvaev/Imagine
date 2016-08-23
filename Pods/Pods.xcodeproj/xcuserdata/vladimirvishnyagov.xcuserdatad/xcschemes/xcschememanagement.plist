@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>PSTAlertController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-razuvaevMusic.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,6 +37,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>19E9E28055334DB7ED19594B8A66005E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>21F1064819190638CEBF79CD9F08D196</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>410B25DF16EA5C5B3E2698F74F9625FB</key>
 		<dict>
 			<key>primary</key>
@@ -42,17 +57,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7ACF393237817B928A9AB7763992DBDD</key>
+		<key>8E6FC34E05DA22176396AF32B14303B6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>80855B5795EB2A1BE1DF346B107EF560</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B3B2BC84728F92B6860E10092443E9A1</key>
+		<key>B04410FCCDAA05F26CC62017F159B0DC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

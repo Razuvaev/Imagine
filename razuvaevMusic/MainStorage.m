@@ -7,6 +7,7 @@
 //
 
 #import "MainStorage.h"
+#import "Settings.h"
 
 @interface MainStorage ()
 
@@ -79,7 +80,18 @@ MainStorage *sharedMainStorage = nil;
     userManagedObject.lastName = user.lastName;
     userManagedObject.avatarMediumUrl = user.avatarMediumUrl;
     
+    Settings *settings = [self createUserSettings];
+    settings.user = userManagedObject;
+    userManagedObject.settings = settings;
+
     [self saveContext];
+}
+
+- (Settings*)createUserSettings {
+    NSEntityDescription *settingsDescriptor = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:_managedObjectContext];
+    Settings *settings = [[Settings alloc] initWithEntity:settingsDescriptor insertIntoManagedObjectContext:_managedObjectContext];
+    settings.autodownload = @(NO);
+    return settings;
 }
 
 -(UserObject *)returnUser {
@@ -103,6 +115,7 @@ MainStorage *sharedMainStorage = nil;
         _currentUser.firstName = userManagedObject.firstName;
         _currentUser.lastName = userManagedObject.lastName;
         _currentUser.avatarMediumUrl = userManagedObject.avatarMediumUrl;
+        _currentUser.settings = userManagedObject.settings;
         return _currentUser;
     }else {
         return nil;
@@ -150,6 +163,52 @@ MainStorage *sharedMainStorage = nil;
         return 0;
     }
     return count;
+}
+
+- (void)clearAudioBase {
+    [self deleteAllOubjectsFor:[self requestForAllMusic]];
+    [self saveContext];
+}
+
+#pragma mark - Helpers
+
+-(NSFetchRequest*)requestForAllMusic {
+    NSFetchRequest* request = [[NSFetchRequest alloc]init];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"order" ascending:YES];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
+    request.entity = entity;
+    request.sortDescriptors = @[descriptor];
+    return request;
+}
+
+-(void)deleteAllOubjectsFor:(NSFetchRequest*)request{
+    NSArray* objects = [self fetchedObjectsForRequest:request];
+    
+    [objects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        [_managedObjectContext deleteObject:(NSManagedObject*)obj];
+        
+    }];
+}
+
+-(NSArray*)fetchedObjectsForRequest:(NSFetchRequest*)request
+{
+    if (request && [request isKindOfClass: [NSFetchRequest class]])
+    {
+        NSError* error;
+        NSArray* objects = [_managedObjectContext executeFetchRequest:request error:&error];
+        if (!error)
+        {
+            return objects;
+        }
+        else
+        {
+#ifdef DEBUG
+            //NSLog(@"Unresolved error %@",error.description);
+#endif
+        }
+    }
+    return nil;
 }
 
 @end

@@ -14,6 +14,7 @@
 @dynamic firstName;
 @dynamic lastName;
 @dynamic avatarMediumUrl;
+@dynamic settings;
 
 @end
 
