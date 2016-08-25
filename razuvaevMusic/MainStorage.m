@@ -152,6 +152,23 @@ MainStorage *sharedMainStorage = nil;
     return NO;
 }
 
+- (AudioManagedObject*)getCachedAudio:(NSString*)title artist:(NSString*)artist {
+    NSFetchRequest *request = [[NSFetchRequest alloc]init];
+    NSEntityDescription *description = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];
+    [request setEntity:description];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"title == %@ and artist == %@",title,artist]];
+    NSError *error = nil;
+    NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (error) {
+        NSLog(@"error: %@", error);
+        return nil;
+    }
+    if (objects.count > 0) {
+        return objects.firstObject;
+    }
+    return nil;
+}
+
 - (NSInteger)nextOrderNumber {
     NSFetchRequest *request = [[NSFetchRequest alloc]init];
     NSEntityDescription *description = [NSEntityDescription entityForName:@"AudioManagedObject" inManagedObjectContext:_managedObjectContext];

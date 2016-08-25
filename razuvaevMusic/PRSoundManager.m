@@ -46,11 +46,19 @@
         [_audioPlayer play:url.absoluteString];
     }
     else {
-        NSURL *url = [NSURL URLWithString:[(AudioObject*)audioObject url]];
-        [_audioPlayer play:url.absoluteString];
-        if ([MainStorage sharedMainStorage].currentUser.settings.autodownload.boolValue) {
-            if ([audioObject downloadStatus] == AudioFilePlain) {
-                [audioObject downloadAudioFile];
+        AudioManagedObject *managedObject = [[MainStorage sharedMainStorage] getCachedAudio:[audioObject title] artist:[audioObject artist]];
+        if (managedObject) {
+            NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+            NSURL *url = [NSURL fileURLWithPathComponents:@[[documentsDirectoryURL path],[managedObject home_url]]];
+            [_audioPlayer play:url.absoluteString];
+        }
+        else {
+            NSURL *url = [NSURL URLWithString:[(AudioObject*)audioObject url]];
+            [_audioPlayer play:url.absoluteString];
+            if ([MainStorage sharedMainStorage].currentUser.settings.autodownload.boolValue) {
+                if ([audioObject downloadStatus] == AudioFilePlain) {
+                    [audioObject downloadAudioFile];
+                }
             }
         }
     }

@@ -69,7 +69,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
         }
         else
         {
-            NSLog(@"@%",error.localizedDescription);
+            NSLog(@"%@",error.localizedDescription);
         }
 
         @try {
