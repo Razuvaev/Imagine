@@ -113,7 +113,6 @@ static CGFloat const rowHeight = 63.5f;
         if ([response.json isKindOfClass:[NSDictionary class]]) {
             NSNumber *number = [response.json valueForKey:@"count"];
             [_header setSoundNumber:number];
-            
             NSArray *items = [response.json valueForKey:@"items"];
             if (items.count > 0) {
                 for(NSDictionary *dict in items) {
@@ -132,7 +131,8 @@ static CGFloat const rowHeight = 63.5f;
             [_refreshControl endRefreshing];
         }
     } errorBlock:^(NSError *error) {
-        
+        [_ai stopAnimating];
+        [_refreshControl endRefreshing];
     }];
 }
 
@@ -214,7 +214,9 @@ static CGFloat const rowHeight = 63.5f;
     if (cell == nil) {
         cell = [[MusicTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
-    [cell setupCellWithAudio:[_musicArray objectAtIndex:indexPath.row]];
+    if (_musicArray.count > 0) {
+        [cell setupCellWithAudio:[_musicArray objectAtIndex:indexPath.row]];
+    }
     return cell;
 }
 
