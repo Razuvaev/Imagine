@@ -62,7 +62,7 @@
 //    [self.view addSubview:self.closeButton];
 //    [self.view addSubview:self.artistLabel];
 //    [self.view addSubview:self.titleLabel];
-//    
+//
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupCoverAndColors:) name:@"imageLoaded" object:nil];
 }
 
