@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AuthViewController : UIViewController <VKSdkDelegate>
+@interface AuthViewController : UIViewController <VKSdkDelegate,VKSdkUIDelegate>
 
 
 @end

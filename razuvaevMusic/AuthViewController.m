@@ -8,6 +8,7 @@
 
 #import "AuthViewController.h"
 #import "MyMusicViewController.h"
+#import "TabBarController.h"
 
 static CGFloat const leftOffset = 20.f;
 static CGFloat const buttonHeight = 40.f;
@@ -65,11 +66,22 @@ static CGFloat const buttonHeight = 40.f;
     VKSdk *vkSdk = [VKSdk initializeWithAppId:VKAPP_ID];
     [vkSdk registerDelegate:self];
     
-    NSArray *scope = [NSArray arrayWithObjects:@"friends", @"audio", nil];
-    [VKSdk authorize:scope];
+    if ([VKSdk vkAppMayExists]) {
+        [VKSdk authorize:@[VK_PER_FRIENDS,VK_PER_AUDIO]];
+    } else {
+        VKSdk *sdkInstance = [VKSdk initializeWithAppId:VKAPP_ID];
+        [sdkInstance registerDelegate:self];
+        [sdkInstance setUiDelegate:self];
+        [VKSdk authorize:@[VK_PER_FRIENDS,VK_PER_AUDIO]];
+    }
 }
 
 #pragma mark - VKDelegate
+
+- (void)vkSdkShouldPresentViewController:(UIViewController *)controller {
+    [self presentViewController:controller animated:YES completion:nil];
+}
+
 - (void)vkSdkAccessAuthorizationFinishedWithResult:(VKAuthorizationResult *)result {
     [TokenManager persistToken:result.token.accessToken];
     
