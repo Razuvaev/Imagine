@@ -41,7 +41,8 @@
 
 - (void)nextAudio:(id)audioObject {
     if ([audioObject isKindOfClass:[AudioManagedObject class]]) {
-        NSURL *url = [NSURL fileURLWithPath:[(AudioManagedObject*)audioObject home_url]];
+        NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+        NSURL *url = [NSURL fileURLWithPathComponents:@[[documentsDirectoryURL path],[(AudioManagedObject*)audioObject home_url]]];
         [_audioPlayer play:url.absoluteString];
     }
     else {

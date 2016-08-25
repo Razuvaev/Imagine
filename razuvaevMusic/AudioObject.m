@@ -61,7 +61,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
         
         if (!error) {
             AudioManagedObject *audioManagedObject = [[MainStorage sharedMainStorage] createNewAudioObject];
-            [audioManagedObject updateWithAudio:self WithHomePath:[filePath path]];
+            [audioManagedObject updateWithAudio:self WithHomePath:filePath.lastPathComponent];
             [[MainStorage sharedMainStorage] saveContext];
 #warning TODO: need reload list of songs, something like this
             MyMusicViewController *myMusicVc = (MyMusicViewController *)[TabBarController viewControllerForIndex:0];
